@@ -1,0 +1,37 @@
+FROM {{ namespace }}/openstack-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        iputils-arping \
+        conntrack \
+        dnsmasq \
+        dnsmasq-utils \
+        ipset \
+        iptables \
+        openvswitch-switch \
+        uuid-runtime \
+        mysql-client \
+    && apt-get clean
+
+RUN curl -o neutron-{{ branch }}.tar.gz http://tarballs.openstack.org/neutron/neutron-{{ branch }}.tar.gz \
+    && tar -zxvf neutron-{{ branch }}.tar.gz
+
+RUN mv neutron*/ /neutron-{{ branch }} \
+    && cd /neutron-{{ branch }} \
+    && useradd --user-group neutron \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /neutron-{{ branch }} \
+    && mkdir -p /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
+    && cp -r /neutron-{{ branch }}/etc/* /etc/neutron/ \
+    && cp -r /neutron-{{ branch }}/etc/neutron/* /etc/neutron/ \
+    && cp /neutron-{{ branch }}/etc/api-paste.ini /usr/share/neutron \
+    && mv /etc/neutron/neutron/ /etc/neutron/plugins/ \
+    && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
+    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf
+
+COPY neutron_sudoers /etc/sudoers.d/neutron_sudoers
+
+RUN usermod -a -G microservices neutron \
+    && chmod 750 /etc/sudoers.d \
+    && chmod 440 /etc/sudoers.d/neutron_sudoers
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH

@@ -1,0 +1,49 @@
+service:
+    name: neutron-server
+    ports:
+        - neutron_server_port
+    container:
+        node-selector:
+          openstack-controller: "true"
+    probes:
+        readiness: "true"
+        liveness: "true"
+    pre:
+        - name: neutron-bootstrap
+          dependencies:
+              - mariadb
+              - keystone-create-project
+          type: single
+          command: /tmp/neutron-server-bootstrap.sh
+          files:
+              - neutron-server-bootstrap.sh
+        - name: neutron-db-sync
+          dependencies:
+              - neutron-bootstrap
+          type: single
+          command:
+              neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
+          dependencies:
+              - rabbitmq
+              - neutron-bootstrap
+          files:
+              - neutron.conf
+              - ml2-conf.ini
+    daemon:
+        command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+        files:
+            - neutron.conf
+            - ml2-conf.ini
+files:
+    neutron.conf:
+        path: /etc/neutron/neutron.conf
+        content: neutron.conf.j2
+        perm: "0600"
+    ml2-conf.ini:
+        path: /etc/neutron/plugins/ml2/ml2_conf.ini
+        content: ml2_conf.ini.j2
+        perm: "0600"
+    neutron-server-bootstrap.sh:
+        path: /tmp/neutron-server-bootstrap.sh
+        content: neutron-server-bootstrap.sh.j2
+        perm: "0755"

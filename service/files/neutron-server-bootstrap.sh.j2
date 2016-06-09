@@ -1,0 +1,33 @@
+#!/bin/bash
+
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME={{ openstack_user_name }}
+export OS_PASSWORD={{ openstack_user_password }}
+export OS_AUTH_URL=http://keystone:{{ keystone_public_port }}/v3
+export OS_IDENTITY_API_VERSION=3
+
+echo "Creating database"
+mysql -u root -p{{ db_root_password }} -h mariadb -e "create database {{ neutron_db_name }};
+grant all privileges on {{ neutron_db_name }}.* to '{{ neutron_db_username }}'@'%' identified by '{{ neutron_db_password }}'"
+
+echo "Creating a user"
+openstack user create --project service --password {{ neutron_db_password }} {{ neutron_db_username }}
+echo "Adding role to user"
+openstack role add admin --project service --user {{ neutron_db_username }}
+echo "Creating a role - done"
+echo "Creating a service"
+openstack service create --name neutron --description "OpenStack Networking" network
+
+echo "Creating internal endpoint"
+openstack endpoint create --region RegionOne \
+      network internal http://neutron-server:{{ neutron_server_port }}
+
+echo "Creating admin endpoint"
+openstack endpoint create --region RegionOne \
+      network admin  http://neutron-server:{{ neutron_server_port }}
+
+echo "Creating public endpoint"
+openstack endpoint create --region RegionOne \
+      network public http://neutron-server:{{ neutron_server_port }}
