@@ -1,0 +1,31 @@
+service:
+  name: openvswitch-db
+  host-net: true
+  daemonset: true
+  node-selector:
+    openstack-compute-controller: "true"
+  containers:
+    - name: openvswitch-db
+      image: openvswitch-db
+      probes:
+        readiness: "true"
+        liveness: "true"
+      volumes:
+        - name: run
+          type: host
+          path: /run
+      pre:
+        - name: ovs-bootstrap
+          command: /opt/ccp/bin/openvswitch-db-bootstrap.sh
+          dependencies:
+            - rabbitmq
+            - neutron-db-sync
+      daemon:
+        command: /usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:emer -vsyslog:err -vfile:info --remote=punix:/run/openvswitch/db.sock --log-file=/var/log/openvswitch/ovsdb-server.log
+        files:
+          - openvswitch-db-bootstrap.sh
+files:
+  openvswitch-db-bootstrap.sh:
+    path: /opt/ccp/bin/openvswitch-db-bootstrap.sh
+    content: openvswitch-db-bootstrap.sh
+    perm: "0755"
