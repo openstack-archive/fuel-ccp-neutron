@@ -51,6 +51,7 @@ l2_population = true
 arp_responder = true
 
 [ovs]
+ovsdb_interface = {{ neutron_ovsdb_interface }}
 bridge_mappings = physnet1:{{ neutron_bridge_name }}
 {% if enable_nova_fake | bool %}
 integration_bridge = br-int-{{ item }}
