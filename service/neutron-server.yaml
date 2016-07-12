@@ -15,7 +15,7 @@ service:
         - name: neutron-bootstrap
           dependencies:
             - mariadb
-            - keystone
+            - keystone-create-project
           type: single
           command: /tmp/neutron-server-bootstrap.sh
           files:
