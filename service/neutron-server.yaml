@@ -2,7 +2,6 @@ service:
   name: neutron-server
   ports:
     - neutron_server_port
-  host-net: true
   node-selector:
     openstack-controller: "true"
   containers:
