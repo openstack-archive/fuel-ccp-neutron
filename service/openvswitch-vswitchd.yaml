@@ -32,6 +32,8 @@ service:
             - vswitchd-check-ovs-db
       daemon:
         command: /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
+        dependencies:
+          - openvswitch-db
         files:
           - ovs-ensure-configured.sh
 files:
