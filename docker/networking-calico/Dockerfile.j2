@@ -1,0 +1,14 @@
+FROM {{ namespace }}/calico-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN curl -o networking-calico-{{ branch }}.tar.gz http://tarballs.openstack.org/networking-calico/networking-calico-{{ branch }}.tar.gz \
+    && tar -zxvf networking-calico-{{ branch }}.tar.gz
+
+# FIXME:(adidenko) remove hardcode hacking (sed) when https://bugs.launchpad.net/networking-calico/+bug/1534599 is fixed
+RUN mv networking-calico*/ /networking-calico-{{ branch }} \
+    && cd /networking-calico-{{ branch }} \
+    && sed -e 's/127.0.0.1:4001/etcd-k8s:2379/g' -i networking_calico/agent/dhcp_agent.py \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico-{{ branch }}
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH
+USER neutron
