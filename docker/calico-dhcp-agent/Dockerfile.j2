@@ -1,0 +1,11 @@
+FROM {{ namespace }}/networking-calico:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN mkdir -p /var/log/calico \
+    && mkdir -p /var/lib/neutron/dhcp/calico \
+    && chown root:neutron /var/lib/neutron/dhcp/calico \
+    && chmod 775 /var/lib/neutron/dhcp/calico \
+    && chown root:root /var/lib/neutron/dhcp \
+    && chmod 755 /var/lib/neutron/dhcp
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH
