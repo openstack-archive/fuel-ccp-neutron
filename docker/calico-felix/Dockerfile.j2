@@ -1,4 +1,6 @@
 FROM {{ namespace }}/networking-calico:{{ tag }}
 MAINTAINER {{ maintainer }}
 
-USER neutron
+RUN mkdir -p /etc/calico
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH
