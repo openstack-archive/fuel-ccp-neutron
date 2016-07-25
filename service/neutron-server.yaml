@@ -11,23 +11,51 @@ service:
         readiness: "true"
         liveness: "true"
       pre:
-        - name: neutron-bootstrap
+        - name: neutron-db-create
           dependencies:
             - mariadb
-            - keystone-create-project
           type: single
-          command: /tmp/neutron-server-bootstrap.sh
-          files:
-            - neutron-server-bootstrap.sh
+          command: mysql -u root -p{{ db_root_password }} -h mariadb -e 'create database `{{ neutron_db_name }}`;
+                   grant all privileges on `{{ neutron_db_name }}`.* to "{{ neutron_db_username }}"@"%" identified by "{{ neutron_db_password }}"'
         - name: neutron-db-sync
           type: single
           command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
           dependencies:
             - rabbitmq
-            - neutron-bootstrap
+            - neutron-db-create
           files:
             - neutron.conf
             - ml2-conf.ini
+        - name: neutron-user-create
+          dependencies:
+            - keystone-create-project
+          type: single
+          command: openstack user create --project service --password {{ neutron_db_password }} {{ neutron_db_username }}
+        - name: neutron-role-add
+          dependencies:
+            - neutron-user-create
+          type: single
+          command: openstack role add --project service --user {{ neutron_db_username }} admin
+        - name: neutron-service-create
+          dependencies:
+            - keystone
+          type: single
+          command: openstack service create --name neutron --description "OpenStack Networking" network
+        - name: neutron-public-endpoint-create
+          dependencies:
+            - neutron-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne network public http://neutron-server:{{ neutron_server_port }}
+        - name: neutron-internal-endpoint-create
+          dependencies:
+            - neutron-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne network internal http://neutron-server:{{ neutron_server_port }}
+        - name: neutron-admin-endpoint-create
+          dependencies:
+            - neutron-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne network admin  http://neutron-server:{{ neutron_server_port }}
       daemon:
         command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
         files:
@@ -42,7 +70,3 @@ files:
     path: /etc/neutron/plugins/ml2/ml2_conf.ini
     content: ml2_conf.ini.j2
     perm: "0600"
-  neutron-server-bootstrap.sh:
-    path: /tmp/neutron-server-bootstrap.sh
-    content: neutron-server-bootstrap.sh.j2
-    perm: "0755"
