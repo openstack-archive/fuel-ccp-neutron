@@ -1,13 +1,20 @@
 # ml2_conf.ini
 [ml2]
 # Changing type_drivers after bootstrap can lead to database inconsistencies
+{% if neutron.plugin_agent == "calico" %}
+type_drivers = local, flat
+tenant_network_types = local
+{% else %}
 type_drivers = flat,vlan,vxlan
 tenant_network_types = vxlan
+{% endif %}
 
 {% if neutron.plugin_agent == "openvswitch" %}
 mechanism_drivers = openvswitch,l2population
 {% elif neutron.plugin_agent == "linuxbridge" %}
 mechanism_drivers = linuxbridge,l2population
+{% elif neutron.plugin_agent == "calico" %}
+mechanism_drivers = calico
 {% endif %}
 
 {% if neutron.enable_qos %}
@@ -50,3 +57,9 @@ physical_interface_mappings = physnet1:{{ neutron.external_interface }}
 l2_population = true
 {% endif %}
 local_ip = {{ network_topology["private"]["address"] }}
+
+{% if neutron.plugin_agent == "calico" %}
+[calico]
+etcd_host = {{ neutron.calico.etcd_host }}
+etcd_port = {{ neutron.calico.etcd_port }}
+{% endif %}
