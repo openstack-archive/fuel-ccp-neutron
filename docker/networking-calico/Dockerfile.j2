@@ -1,0 +1,7 @@
+FROM {{ namespace }}/calico-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN curl -o networking-calico-{{ branch }}.tar.gz http://tarballs.openstack.org/networking-calico/networking-calico-{{ branch }}.tar.gz \
+    && tar -zxvf networking-calico-{{ branch }}.tar.gz
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH
