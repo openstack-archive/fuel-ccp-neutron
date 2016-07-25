@@ -1,0 +1,12 @@
+FROM {{ namespace }}/neutron-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        net-tools \
+    && apt-get clean
+
+{{ copy_sources("projectcalico/libcalico", "/libcalico") }}
+
+RUN /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /libcalico \
+    && rm -rf /libcalico \
+    && mkdir -p /var/log/calico /etc/calico
