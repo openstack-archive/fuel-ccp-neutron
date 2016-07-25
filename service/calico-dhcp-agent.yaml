@@ -1,0 +1,45 @@
+service:
+  name: calico-dhcp-agent
+  host-net: true
+  daemonset: true
+  node-selector:
+    openstack-compute: "true"
+  containers:
+    - name: calico-dhcp-agent
+      image: calico-dhcp-agent
+      privileged: true
+      probes:
+        readiness: "true"
+        liveness: "true"
+      volumes:
+        - name: run
+          type: host
+          path: /run
+        - name: netns
+          type: host
+          path: /run/netns
+        - name: metadata-socket
+          type: host
+          path: /var/lib/neutron/ccp
+      daemon:
+        command: calico-dhcp-agent --config-file /etc/neutron/neutron.conf
+        dependencies:
+          - neutron-db-sync
+          - rabbitmq
+        files:
+          - neutron.conf
+          - ml2-conf.ini
+          - dnsmasq.conf
+files:
+  neutron.conf:
+    path: /etc/neutron/neutron.conf
+    content: neutron.conf.j2
+    perm: "0600"
+  ml2-conf.ini:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    content: ml2_conf.ini.j2
+    perm: "0600"
+  dnsmasq.conf:
+    path: /etc/neutron/dnsmasq.conf
+    content: dnsmasq.conf.j2
+    perm: "0600"
