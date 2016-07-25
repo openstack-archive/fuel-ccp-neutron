@@ -1,0 +1,14 @@
+FROM {{ namespace }}/neutron-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        net-tools \
+    && apt-get clean \
+    && cd /var/tmp/ \
+    && curl -o calico-{{ calico_version }}.tar.gz https://codeload.github.com/projectcalico/calico/tar.gz/{{ calico_version }} \
+    && tar -zxvf calico-{{ calico_version }}.tar.gz \
+    && sed -e 's#FELIX_PREFIX = "felix-"#FELIX_PREFIX = "ccp-"#' -i ./calico-{{ calico_version }}/calico/felix/frules.py \
+    && sed -e 's#FELIX_PFX = "felix-"#FELIX_PFX = "ccp-"#' -i ./calico-{{ calico_version }}/calico/felix/ipsets.py \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade ./calico-{{ calico_version }} \
+    && rm -rf calico-{{ calico_version }}.tar.gz calico-{{ calico_version }} \
+    && mkdir -p /var/log/calico /etc/calico
