@@ -1,0 +1,17 @@
+diff --git a/networking_calico/agent/dhcp_agent.py b/networking_calico/agent/dhcp_agent.py
+index 110730d..ee45309 100644
+--- a/networking_calico/agent/dhcp_agent.py
++++ b/networking_calico/agent/dhcp_agent.py
+@@ -457,6 +457,12 @@ class SubnetWatcher(EtcdWatcher):
+         We handle this by telling the main watcher to do a resync.
+         """
+         LOG.info("Subnet %s created or updated", subnet_id)
++
++        # Get current NetModel description of the Calico network.
++        net = self.endpoint_watcher.agent.cache.get_network_by_id(NETWORK_ID)
++        #subnet = [s for s in net.subnets if s['id'] == subnet_id]
++        LOG.debug("subnets&ports: %s, %s", net.subnets, net.ports)
++
+         self.endpoint_watcher.resync_after_current_poll = True
+ 
+     def loop(self):

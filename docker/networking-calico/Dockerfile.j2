@@ -1,0 +1,9 @@
+FROM {{ namespace }}/calico-felix:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{{ copy_sources("openstack/networking-calico", "/networking-calico") }}
+
+ADD netw-calico.patch /var/tmp/netw-calico.patch
+RUN patch -d /networking-calico -p1 < /var/tmp/netw-calico.patch \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico \
+    && rm -rf /networking-calico
