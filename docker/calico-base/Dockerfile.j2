@@ -1,0 +1,14 @@
+FROM {{ namespace }}/neutron-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        net-tools \
+    && apt-get clean
+
+RUN curl -o calico-1.4.0b3.tar.gz https://codeload.github.com/projectcalico/calico/tar.gz/1.4.0b3 \
+    && tar -zxvf calico-1.4.0b3.tar.gz
+
+RUN cd /calico-1.4.0b3 \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /calico-1.4.0b3
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH

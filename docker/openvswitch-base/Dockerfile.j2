@@ -1,7 +1,0 @@
-FROM {{ namespace }}/base-tools:{{ tag }}
-MAINTAINER {{ maintainer }}
-
-RUN apt-get -y install --no-install-recommends \
-        openvswitch-switch \
-    && apt-get clean
-
