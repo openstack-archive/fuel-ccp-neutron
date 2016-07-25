@@ -1,0 +1,68 @@
+diff --git a/networking_calico/agent/dhcp_agent.py b/networking_calico/agent/dhcp_agent.py
+index 110730d..dbf7584 100644
+--- a/networking_calico/agent/dhcp_agent.py
++++ b/networking_calico/agent/dhcp_agent.py
+@@ -25,6 +25,8 @@ eventlet.monkey_patch()
+ 
+ from oslo_config import cfg
+ 
++import oslo_messaging
++
+ from neutron.agent.common import config
+ from neutron.agent.dhcp.agent import DhcpAgent
+ from neutron.agent.dhcp.agent import NetworkCache
+@@ -32,6 +34,7 @@ from neutron.agent.dhcp_agent import register_options
+ from neutron.agent.linux import dhcp
+ from neutron.common import config as common_config
+ from neutron.common import constants
++from neutron.common import rpc
+ 
+ from calico.common import mkdir_p
+ from calico.datamodel_v1 import dir_for_host
+@@ -40,6 +43,8 @@ from calico.datamodel_v1 import SUBNET_DIR
+ from calico.etcdutils import EtcdWatcher
+ from calico.etcdutils import safe_decode_json
+ 
++from neutron import context
++
+ from networking_calico.agent.linux.dhcp import DnsmasqRouted
+ from networking_calico.common import config as calico_config
+ 
+@@ -74,12 +79,37 @@ class FakePlugin(object):
+ 
+     """
+ 
++    def __init__(self, topic, host):
++        self.host = host
++        target = oslo_messaging.Target(
++            topic=topic,
++            namespace=constants.RPC_NAMESPACE_DHCP_PLUGIN,
++            version='1.0')
++        self.client = rpc.get_client(target)
++
++    @property
++    def context(self):
++        # TODO(kevinbenton): the context should really be passed in to each of
++        # these methods so a call can be tracked all of the way through the
++        # system but that will require a larger refactor to pass the context
++        # everywhere. We just generate a new one here on each call so requests
++        # can be independently tracked server side.
++        return context.get_admin_context_without_session()
++
++    def get_active_networks_info(self):
++        """Make a remote process call to retrieve all network info."""
++        cctxt = self.client.prepare(version='1.1')
++        networks = cctxt.call(self.context, 'get_active_networks_info',
++                              host=self.host)
++        return [dhcp.NetModel(n) for n in networks]
++
+     def create_dhcp_port(self, port):
+         """Support the following DHCP DeviceManager calls.
+ 
+         dhcp_port = self.plugin.create_dhcp_port({'port': port_dict})
+         """
+         LOG.debug("create_dhcp_port: %s", port)
++        LOG.debug("active_networks_info: %s", self.get_active_networks_info())
+         port['port']['id'] = 'dhcp'
+ 
+         # The following MAC address will be assigned to the Linux dummy
