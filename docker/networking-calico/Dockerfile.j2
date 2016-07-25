@@ -1,0 +1,7 @@
+FROM {{ namespace }}/calico-felix:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{{ copy_sources("openstack/networking-calico", "/networking-calico") }}
+
+RUN /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico \
+    && rm -rf /networking-calico

@@ -1,0 +1,9 @@
+FROM {{ namespace }}/calico-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{{ copy_sources("projectcalico/calico", "/calico") }}
+
+RUN sed -e 's#FELIX_PREFIX = "felix-"#FELIX_PREFIX = "ccp-"#' -i /calico/calico/felix/frules.py \
+    && sed -e 's#FELIX_PFX = "felix-"#FELIX_PFX = "ccp-"#' -i ./calico/calico/felix/ipsets.py \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /calico \
+    && rm -rf /calico

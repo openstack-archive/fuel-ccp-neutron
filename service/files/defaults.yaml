@@ -21,3 +21,12 @@ sources:
   openstack/neutron:
     git_url: https://github.com/openstack/neutron.git
     git_ref: master
+  projectcalico/calico:
+    git_url: https://github.com/projectcalico/calico.git
+    git_ref: 1.4.0
+  projectcalico/libcalico:
+    git_url: https://github.com/projectcalico/libcalico.git
+    git_ref: v0.16.0
+  openstack/networking-calico:
+    git_url: https://github.com/openstack/networking-calico.git
+    git_ref: master
