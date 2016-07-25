@@ -1,5 +1,9 @@
 # ml2_conf.ini
 [ml2]
+{% if neutron_plugin_agent == "calico" %}
+type_drivers = local, flat
+tenant_network_types = local
+{% else %}
 {% if enable_ironic %}
 tenant_network_types = vxlan, flat
 mechanism_drivers = openvswitch
@@ -8,11 +12,14 @@ mechanism_drivers = openvswitch
 type_drivers = flat,vlan,vxlan
 tenant_network_types = vxlan
 {% endif %}
+{% endif %}
 
 {% if neutron_plugin_agent == "openvswitch" %}
 mechanism_drivers = openvswitch,l2population
 {% elif neutron_plugin_agent == "linuxbridge" %}
 mechanism_drivers = linuxbridge,l2population
+{% elif neutron_plugin_agent == "calico" %}
+mechanism_drivers = calico
 {% endif %}
 
 {% if enable_neutron_qos %}
@@ -66,3 +73,9 @@ physical_interface_mappings = physnet1:{{ neutron_external_interface }}
 l2_population = true
 {% endif %}
 local_ip = {{ network_topology["private"]["address"] }}
+
+{% if neutron_plugin_agent == "calico" %}
+[calico]
+etcd_host = {{ calico_etcd_host }}
+etcd_port = {{ calico_etcd_port }}
+{% endif %}
