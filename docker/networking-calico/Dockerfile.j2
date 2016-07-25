@@ -1,0 +1,15 @@
+FROM {{ namespace }}/calico-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN curl -o networking-calico-{{ branch }}.tar.gz http://tarballs.openstack.org/networking-calico/networking-calico-{{ branch }}.tar.gz \
+    && tar -zxvf networking-calico-{{ branch }}.tar.gz
+
+# FIXME:(adidenko) remove patching when https://bugs.launchpad.net/networking-calico/+bug/1534599 is fixed
+RUN mv networking-calico*/ /networking-calico-{{ branch }} \
+    && cd /networking-calico-{{ branch }} \
+    && curl -s https://review.openstack.org/changes/344848/revisions/27852db8784e3aaaeb9158f05a4142fc5ab2a64f/patch?download \
+    | base64 --decode > /var/tmp/lp-1534599.patch \
+    && patch -p1 < /var/tmp/lp-1534599.patch \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico-{{ branch }}
+
+ENV PATH /var/lib/microservices/venv/bin:$PATH
