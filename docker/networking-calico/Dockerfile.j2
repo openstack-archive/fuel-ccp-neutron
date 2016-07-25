@@ -1,0 +1,9 @@
+FROM {{ namespace }}/calico-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN cd /var/tmp \
+    && curl -o networking-calico-{{ branch }}.tar.gz http://tarballs.openstack.org/networking-calico/networking-calico-{{ branch }}.tar.gz \
+    && tar -zxvf networking-calico-{{ branch }}.tar.gz \
+    && mv networking-calico*/ /networking-calico-{{ branch }} \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade ./networking-calico-{{ branch }} \
+    && rm -rf networking-calico*

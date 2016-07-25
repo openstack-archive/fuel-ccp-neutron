@@ -16,3 +16,6 @@ configs:
     enable_ironic: "false"
     enable_neutron_qos: "false"
     ovs_db_loglevel: "info"
+
+versions:
+    calico_version: "1.4.0"
