@@ -2,8 +2,6 @@ service:
   name: neutron-openvswitch-agent
   host-net: true
   daemonset: true
-  node-selector:
-    openstack-compute-controller: "true"
   containers:
     - name: neutron-openvswitch-agent
       image: neutron-openvswitch-agent

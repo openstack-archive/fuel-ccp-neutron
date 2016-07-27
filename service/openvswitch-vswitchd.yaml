@@ -2,8 +2,6 @@ service:
   name: openvswitch-vswitchd
   host-net: true
   daemonset: true
-  node-selector:
-    openstack-compute-controller: "true"
   containers:
     - name: openvswitch-vswitchd
       image: openvswitch-vswitchd
