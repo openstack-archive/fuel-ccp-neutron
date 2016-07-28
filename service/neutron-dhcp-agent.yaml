@@ -1,8 +1,6 @@
 service:
   name: neutron-dhcp-agent
   host-net: true
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: neutron-dhcp-agent
       image: neutron-dhcp-agent
