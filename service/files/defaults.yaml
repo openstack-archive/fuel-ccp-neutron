@@ -15,3 +15,4 @@ configs:
     enable_neutron_lbaas: "false"
     enable_ironic: "false"
     enable_neutron_qos: "false"
+    ovs_db_loglevel: "info"
