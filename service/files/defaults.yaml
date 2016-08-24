@@ -1,18 +1,23 @@
 configs:
-    neutron_db_password: password
-    neutron_db_name: neutron
-    neutron_db_username: neutron
-    neutron_server_port: 9696
-    neutron-metadata-agent-port: 9697
-    neutron_bridge_name: "br-ex"
-    neutron_external_interface: "eth2"
-    neutron_logging_debug: "false"
-    neutron_plugin_agent: "openvswitch"
-    neutron_ovsdb_interface: "native"
-    neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
-    memcache_secret_key: idunno
-    enable_nova_fake: "false"
-    enable_neutron_lbaas: "false"
-    enable_ironic: "false"
-    enable_neutron_qos: "false"
-    ovs_db_loglevel: "info"
+  neutron_db_password: password
+  neutron_db_name: neutron
+  neutron_db_username: neutron
+  neutron_server_port: 9696
+  neutron-metadata-agent-port: 9697
+  neutron_bridge_name: "br-ex"
+  neutron_external_interface: "eth2"
+  neutron_logging_debug: "false"
+  neutron_plugin_agent: "openvswitch"
+  neutron_ovsdb_interface: "native"
+  neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
+  memcache_secret_key: idunno
+  enable_nova_fake: "false"
+  enable_neutron_lbaas: "false"
+  enable_ironic: "false"
+  enable_neutron_qos: "false"
+  ovs_db_loglevel: "info"
+
+sources:
+  openstack/neutron:
+    git_url: https://github.com/openstack/neutron.git
+    git_ref: master
