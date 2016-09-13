@@ -1,7 +1,7 @@
 service:
   name: neutron-server
   ports:
-    - neutron_server_port
+    - {{ neutron_server_port }}
   containers:
     - name: neutron-server
       image: neutron-server
