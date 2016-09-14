@@ -71,12 +71,7 @@ user_domain_id = default
 project_name = service
 username = {{ neutron_db_username }}
 password = {{ neutron_db_password }}
-
-memcache_security_strategy = ENCRYPT
-memcache_secret_key = {{ memcache_secret_key }}
-# Here we should have a list of memcached servers, but for now 1 is ok
-memcached_servers = memcached:11211
-
+memcached_servers = memcached:{{ memcached_port }}
 
 [oslo_messaging_notifications]
 driver = noop
