@@ -34,7 +34,7 @@ service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_d
 {% endif %}
 
 [nova]
-auth_url = http://keystone:{{ keystone_admin_port }}
+auth_url = http://keystone.{{ namespace }}:{{ keystone_admin_port }}
 auth_type = password
 project_domain_id = default
 user_domain_id = default
@@ -53,18 +53,18 @@ rabbit_password = {{ rabbitmq_password }}
 rabbit_ha_queues = true
 # Here we should have a list of RBMQ servers, but for now 1 is ok
 # FIXME
-rabbit_hosts = rabbitmq:{{ rabbitmq_port }}
+rabbit_hosts = rabbitmq.{{ namespace }}:{{ rabbitmq_port }}
 
 [agent]
 root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [database]
-connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}@mariadb/{{ neutron_db_name }}
+connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}@mariadb.{{ namespace }}/{{ neutron_db_name }}
 max_retries = -1
 
 [keystone_authtoken]
-auth_uri = http://keystone:{{ keystone_public_port }}
-auth_url = http://keystone:{{ keystone_admin_port }}
+auth_uri = http://keystone.{{ namespace }}:{{ keystone_public_port }}
+auth_url = http://keystone.{{ namespace }}:{{ keystone_admin_port }}
 auth_type = password
 project_domain_id = default
 user_domain_id = default
