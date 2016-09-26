@@ -1,6 +1,6 @@
 # ml2_conf.ini
 [ml2]
-{% if enable_ironic | bool %}
+{% if enable_ironic %}
 tenant_network_types = vxlan, flat
 mechanism_drivers = openvswitch
 {% else %}
@@ -15,19 +15,19 @@ mechanism_drivers = openvswitch,l2population
 mechanism_drivers = linuxbridge,l2population
 {% endif %}
 
-{% if enable_neutron_qos | bool %}
+{% if enable_neutron_qos %}
 extension_drivers = qos
 {% endif %}
 
 [ml2_type_vlan]
-{% if enable_ironic | bool %}
+{% if enable_ironic %}
 network_vlan_ranges = physnet1
 {% else %}
 network_vlan_ranges =
 {% endif %}
 
 [ml2_type_flat]
-{% if enable_ironic | bool %}
+{% if enable_ironic %}
 flat_networks = *
 {% else %}
 flat_networks = physnet1
@@ -54,7 +54,7 @@ arp_responder = true
 ovsdb_interface = {{ neutron_ovsdb_interface }}
 ovsdb_connection = {{ neutron_ovsdb_connection }}
 bridge_mappings = physnet1:{{ neutron_bridge_name }}
-{% if enable_nova_fake | bool %}
+{% if enable_nova_fake %}
 integration_bridge = br-int-{{ item }}
 {% endif %}
 {% elif neutron_plugin_agent == "linuxbridge" %}

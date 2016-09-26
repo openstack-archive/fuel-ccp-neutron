@@ -19,16 +19,16 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
 {% endif %}
 
-{% if enable_nova_fake | bool %}
+{% if enable_nova_fake %}
 ovs_integration_bridge = br-int-{{ item }}
 host = {{ ansible_hostname }}_{{ item }}
 {% endif %}
 
 allow_overlapping_ips = true
 core_plugin = ml2
-service_plugins = router{% if enable_neutron_lbaas | bool %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if enable_neutron_qos | bool %},qos{% endif %}
+service_plugins = router{% if enable_neutron_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if enable_neutron_qos %},qos{% endif %}
 
-{% if enable_neutron_lbaas | bool %}
+{% if enable_neutron_lbaas %}
 [service_providers]
 service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
 {% endif %}
