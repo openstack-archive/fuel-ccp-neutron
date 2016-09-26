@@ -19,4 +19,4 @@ configs:
 sources:
   openstack/neutron:
     git_url: https://github.com/openstack/neutron.git
-    git_ref: master
+    git_ref: stable/newton
