@@ -6,14 +6,14 @@ configs:
   neutron-metadata-agent-port: 9697
   neutron_bridge_name: "br-ex"
   neutron_external_interface: "eth2"
-  neutron_logging_debug: "false"
+  neutron_logging_debug: false
   neutron_plugin_agent: "openvswitch"
   neutron_ovsdb_interface: "native"
   neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
-  enable_nova_fake: "false"
-  enable_neutron_lbaas: "false"
-  enable_ironic: "false"
-  enable_neutron_qos: "false"
+  enable_nova_fake: false
+  enable_neutron_lbaas: false
+  enable_ironic: false
+  enable_neutron_qos: false
   ovs_db_loglevel: "info"
 
 sources:
