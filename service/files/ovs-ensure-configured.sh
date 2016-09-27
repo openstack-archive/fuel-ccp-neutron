@@ -9,9 +9,22 @@ if [[ $rc == 2 ]]; then
     ovs-vsctl --no-wait add-br $bridge
 fi
 
-if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port\>") ]]; then
+ovs_veth="veth_${bridge}"
+lnx_veth="veth_${port}"
+
+#(FIXME) add proper validation
+ip link show ${ovs_veth}; rc=$?
+if [[ $rc == 1 ]]; then
     changed=changed
-    ovs-vsctl --no-wait add-port $bridge $port
+    ip link add ${ovs_veth} type veth peer name ${lnx_veth}
+    ip link set up ${ovs_veth}
+    ip link set up ${lnx_veth}
+    brctl addif ${port} ${lnx_veth}
+fi
+
+if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<${ovs_veth}\>") ]]; then
+    changed=changed
+    ovs-vsctl --no-wait add-port $bridge ${ovs_veth}
 fi
 
 echo $changed
