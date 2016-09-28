@@ -19,6 +19,8 @@ service:
       pre:
         - name: vswitchd-bootstrap
           command: modprobe openvswitch
+        - name: vswitchd-port-forwarding
+          command: echo 1 > /proc/sys/net/ipv4/ip_forward
         - name: vswitchd-check-ovs-db
           command: ovs-vsctl --no-wait show
           dependencies:
