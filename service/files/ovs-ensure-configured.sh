@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 bridge=$1
 port=$2
 
@@ -15,3 +17,6 @@ if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port\>") ]]; then
 fi
 
 echo $changed
+
+# enable ip forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
