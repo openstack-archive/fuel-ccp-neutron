@@ -34,7 +34,7 @@ service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_d
 {% endif %}
 
 [nova]
-auth_url = http://{{ address('keystone') }}:{{ keystone_admin_port }}
+auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}
 auth_type = password
 project_domain_id = default
 user_domain_id = default
@@ -63,8 +63,8 @@ connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}
 max_retries = -1
 
 [keystone_authtoken]
-auth_uri = http://{{ address('keystone') }}:{{ keystone_public_port }}
-auth_url = http://{{ address('keystone') }}:{{ keystone_admin_port }}
+auth_uri = http://{{ address('keystone') }}:{{ keystone.public_port }}
+auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}
 auth_type = password
 project_domain_id = default
 user_domain_id = default
