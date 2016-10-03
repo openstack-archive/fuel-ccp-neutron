@@ -59,7 +59,7 @@ rabbit_hosts = rabbitmq:{{ rabbitmq_port }}
 root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [database]
-connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}@mariadb/{{ neutron_db_name }}
+connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}@{{ address('mariadb') }}/{{ neutron_db_name }}
 max_retries = -1
 
 [keystone_authtoken]
