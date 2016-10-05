@@ -10,9 +10,9 @@ service:
         readiness: "true"
         liveness: "true"
       volumes:
-        - name: run
+        - name: ovs-socket
           type: host
-          path: /run
+          path: /run/openvswitch
         - name: modules
           type: host
           path: /lib/modules

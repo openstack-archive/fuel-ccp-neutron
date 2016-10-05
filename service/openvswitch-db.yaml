@@ -9,9 +9,9 @@ service:
         readiness: "true"
         liveness: "true"
       volumes:
-        - name: run
+        - name: ovs-socket
           type: host
-          path: /run
+          path: /run/openvswitch
       pre:
         - name: ovs-bootstrap
           command: /opt/ccp/bin/openvswitch-db-bootstrap.sh

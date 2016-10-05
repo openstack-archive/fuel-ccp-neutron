@@ -9,12 +9,9 @@ service:
         readiness: "true"
         liveness: "true"
       volumes:
-        - name: run
+        - name: ovs-socket
           type: host
-          path: /run
-        - name: netns
-          type: host
-          path: /run/netns
+          path: /run/openvswitch
         - name: metadata-socket
           type: host
           path: /var/lib/neutron/ccp

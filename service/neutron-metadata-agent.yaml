@@ -9,9 +9,6 @@ service:
         readiness: "true"
         liveness: "true"
       volumes:
-        - name: netns
-          type: host
-          path: /run/netns
         - name: metadata-socket
           type: host
           path: /var/lib/neutron/ccp
