@@ -40,8 +40,8 @@ project_domain_id = default
 user_domain_id = default
 region_name = RegionOne
 project_name = service
-username = {{ nova_db_username }}
-password = {{ nova_db_password }}
+username = {{ nova.db.username }}
+password = {{ nova.db.password }}
 endpoint_type = internal
 
 [oslo_concurrency]
