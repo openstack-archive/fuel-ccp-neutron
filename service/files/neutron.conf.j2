@@ -1,29 +1,29 @@
 # neutron.conf
 [DEFAULT]
-debug = {{ neutron_logging_debug }}
+debug = {{ neutron.logging_debug }}
 
 use_stderr = True
 use_syslog = False
 
 bind_host = {{ network_topology["private"]["address"] }}
-bind_port = {{ neutron_server_port }}
+bind_port = {{ neutron.server_port }}
 
 api_paste_config = /usr/share/neutron/api-paste.ini
 endpoint_type = internalURL
 
 metadata_proxy_socket = /var/lib/neutron/ccp/metadata_proxy
 
-{% if neutron_plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent == "openvswitch" %}
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
-{% elif neutron_plugin_agent == "linuxbridge" %}
+{% elif neutron.plugin_agent == "linuxbridge" %}
 interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
 {% endif %}
 
 allow_overlapping_ips = true
 core_plugin = ml2
-service_plugins = router{% if enable_neutron_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if enable_neutron_qos %},qos{% endif %}
+service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
 
-{% if enable_neutron_lbaas %}
+{% if neutron.enable_lbaas %}
 [service_providers]
 service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
 {% endif %}
@@ -54,7 +54,7 @@ rabbit_hosts = {{ address('rabbitmq') }}:{{ rabbitmq.port }}
 root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [database]
-connection = mysql+pymysql://{{ neutron_db_username }}:{{ neutron_db_password }}@{{ address('mariadb') }}/{{ neutron_db_name }}
+connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address('mariadb') }}/{{ neutron.db.name }}
 max_retries = -1
 
 [keystone_authtoken]
@@ -64,8 +64,8 @@ auth_type = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
-username = {{ neutron_db_username }}
-password = {{ neutron_db_password }}
+username = {{ neutron.db.username }}
+password = {{ neutron.db.password }}
 memcached_servers = {{ address('memcached') }}:{{ memcached.port }}
 
 [oslo_messaging_notifications]

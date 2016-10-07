@@ -19,7 +19,7 @@ service:
             - rabbitmq
             - neutron-db-sync
       daemon:
-        command: "/usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:{{ ovs_db_loglevel }} --remote=punix:/run/openvswitch/db.sock"
+        command: "/usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:{{ ovs_db.loglevel }} --remote=punix:/run/openvswitch/db.sock"
         files:
           - openvswitch-db-bootstrap.sh
 files:

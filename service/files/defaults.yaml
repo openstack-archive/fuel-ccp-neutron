@@ -1,17 +1,21 @@
 configs:
-  neutron_db_password: password
-  neutron_db_name: neutron
-  neutron_db_username: neutron
-  neutron_server_port: 9696
-  neutron_bridge_name: "br-ex"
-  neutron_external_interface: "eth2"
-  neutron_logging_debug: false
-  neutron_plugin_agent: "openvswitch"
-  neutron_ovsdb_interface: "native"
-  neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
-  enable_neutron_lbaas: false
-  enable_neutron_qos: false
-  ovs_db_loglevel: "info"
+  neutron:
+    db:
+      password: password
+      name: neutron
+      username: neutron
+    server_port: 9696
+    bridge_name: "br-ex"
+    external_interface: "eth2"
+    logging_debug: false
+    plugin_agent: "openvswitch"
+    ovsdb:
+      interface: "native"
+      connection: "unix:/run/openvswitch/db.sock"
+    enable_lbaas: false
+    enable_qos: false
+  ovs_db:
+    loglevel: "info"
 
 sources:
   openstack/neutron:

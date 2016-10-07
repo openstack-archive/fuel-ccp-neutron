@@ -4,13 +4,13 @@
 type_drivers = flat,vlan,vxlan
 tenant_network_types = vxlan
 
-{% if neutron_plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent == "openvswitch" %}
 mechanism_drivers = openvswitch,l2population
-{% elif neutron_plugin_agent == "linuxbridge" %}
+{% elif neutron.plugin_agent == "linuxbridge" %}
 mechanism_drivers = linuxbridge,l2population
 {% endif %}
 
-{% if enable_neutron_qos %}
+{% if neutron.enable_qos %}
 extension_drivers = qos
 {% endif %}
 
@@ -25,25 +25,25 @@ vni_ranges = 1:1000
 vxlan_group = 239.1.1.1
 
 [securitygroup]
-{% if neutron_plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent == "openvswitch" %}
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
-{% elif neutron_plugin_agent == "linuxbridge" %}
+{% elif neutron.plugin_agent == "linuxbridge" %}
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
 {% endif %}
 
-{% if neutron_plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent == "openvswitch" %}
 [agent]
 tunnel_types = vxlan
 l2_population = true
 arp_responder = true
 
 [ovs]
-ovsdb_interface = {{ neutron_ovsdb_interface }}
-ovsdb_connection = {{ neutron_ovsdb_connection }}
-bridge_mappings = physnet1:{{ neutron_bridge_name }}
-{% elif neutron_plugin_agent == "linuxbridge" %}
+ovsdb_interface = {{ neutron.ovsdb.interface }}
+ovsdb_connection = {{ neutron.ovsdb.connection }}
+bridge_mappings = physnet1:{{ neutron.bridge_name }}
+{% elif neutron.plugin_agent == "linuxbridge" %}
 [linux_bridge]
-physical_interface_mappings = physnet1:{{ neutron_external_interface }}
+physical_interface_mappings = physnet1:{{ neutron.external_interface }}
 
 
 [vxlan]
