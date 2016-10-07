@@ -3,7 +3,6 @@ configs:
   neutron_db_name: neutron
   neutron_db_username: neutron
   neutron_server_port: 9696
-  neutron-metadata-agent-port: 9697
   neutron_bridge_name: "br-ex"
   neutron_external_interface: "eth2"
   neutron_logging_debug: false
@@ -11,7 +10,6 @@ configs:
   neutron_ovsdb_interface: "native"
   neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
   enable_neutron_lbaas: false
-  enable_ironic: false
   enable_neutron_qos: false
   ovs_db_loglevel: "info"
 
