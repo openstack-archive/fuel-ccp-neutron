@@ -10,7 +10,6 @@ configs:
   neutron_plugin_agent: "openvswitch"
   neutron_ovsdb_interface: "native"
   neutron_ovsdb_connection: "unix:/run/openvswitch/db.sock"
-  enable_nova_fake: false
   enable_neutron_lbaas: false
   enable_ironic: false
   enable_neutron_qos: false
