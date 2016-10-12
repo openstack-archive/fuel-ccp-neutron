@@ -40,7 +40,7 @@ arp_responder = true
 [ovs]
 ovsdb_interface = {{ neutron.ovsdb.interface }}
 ovsdb_connection = {{ neutron.ovsdb.connection }}
-bridge_mappings = physnet1:{{ neutron.bridge_name }}
+bridge_mappings = physnet1:{{ neutron.ext_bridge_name }},physnet2:{{ neutron.int_bridge_name }}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 [linux_bridge]
 physical_interface_mappings = physnet1:{{ neutron.external_interface }}
