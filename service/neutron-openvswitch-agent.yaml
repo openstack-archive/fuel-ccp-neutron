@@ -21,7 +21,7 @@ service:
         dependencies:
           - neutron-db-sync
           - rabbitmq
-          - openvswitch-vswitchd
+          - openvswitch-vswitchd:local
         files:
           - neutron.conf
           - ml2-conf.ini
