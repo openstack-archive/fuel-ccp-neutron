@@ -17,7 +17,7 @@ RUN apt-get -y install --no-install-recommends \
 
 RUN cd /neutron \
     && useradd --user-group neutron \
-    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /neutron \
+    && /var/lib/microservices/venv/bin/pip install --upgrade /neutron \
     && mkdir -p /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
     && cp -r /neutron/etc/* /etc/neutron/ \
     && cp -r /neutron/etc/neutron/* /etc/neutron/ \
