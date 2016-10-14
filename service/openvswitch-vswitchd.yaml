@@ -25,7 +25,7 @@ service:
           command: ovs-vsctl --no-wait show
           dependencies:
             - vswitchd-bootstrap
-            - openvswitch-db
+            - openvswitch-db:local
         - name: vswitchd-setup-ovs-bridge
           command: /usr/local/bin/ovs-ensure-configured.sh {{ neutron.bridge_name }} {{ neutron.external_interface }}
           dependencies:
@@ -33,7 +33,7 @@ service:
       daemon:
         command: /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
         dependencies:
-          - openvswitch-db
+          - openvswitch-db:local
         files:
           - ovs-ensure-configured.sh
 files:
