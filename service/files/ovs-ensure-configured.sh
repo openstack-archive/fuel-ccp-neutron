@@ -3,6 +3,8 @@
 bridge=$1
 port=$2
 
+ip link set $port up
+
 ovs-vsctl br-exists $bridge; rc=$?
 if [[ $rc == 2 ]]; then
     changed=changed
