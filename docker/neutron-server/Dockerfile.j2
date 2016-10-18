@@ -1,4 +1,4 @@
-FROM {{ namespace }}/neutron-base:{{ tag }}
+FROM {{ image_spec("neutron-base") }}
 MAINTAINER {{ maintainer }}
 
 USER neutron

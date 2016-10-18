@@ -1,4 +1,4 @@
-FROM {{ namespace }}/neutron-base:{{ tag }}
+FROM {{ image_spec("neutron-base") }}
 MAINTAINER {{ maintainer }}
 
 COPY neutron_sudoers /etc/sudoers.d/neutron_sudoers
