@@ -30,6 +30,11 @@ RUN cd /neutron \
     && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
     && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf
 
+{{ copy_sources("openstack/networking-generic-switch", "/networking-generic-switch") }}
+
+RUN cd /networking-generic-switch \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-generic-switch
+
 COPY neutron_sudoers /etc/sudoers.d/neutron_sudoers
 
 RUN usermod -a -G microservices neutron \
