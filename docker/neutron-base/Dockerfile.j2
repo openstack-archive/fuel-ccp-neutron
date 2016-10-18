@@ -18,6 +18,7 @@ RUN apt-get -y install --no-install-recommends \
 {{ copy_sources("projectcalico/libcalico", "/libcalico") }}
 {{ copy_sources("projectcalico/calico", "/calico") }}
 {{ copy_sources("openstack/networking-calico", "/networking-calico") }}
+{{ copy_sources("openstack/networking-generic-switch", "/networking-generic-switch") }}
 
 RUN cd /neutron \
     && useradd --user-group neutron \
@@ -43,5 +44,8 @@ RUN /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /libcal
     && rm -rf /calico \
     && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico \
     && rm -rf /networking-calico
+
+RUN /var/lib/microservices/venv/bin/pip install --upgrade /networking-generic-switch \
+    && rm -rf /networking-generic-switch
 
 ENV PATH /var/lib/microservices/venv/bin:$PATH

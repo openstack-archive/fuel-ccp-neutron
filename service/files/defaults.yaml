@@ -19,6 +19,8 @@ configs:
     calico:
       etcd_host: "etcd-k8s"
       etcd_port: 2379
+    genericswitch:
+      devices: {}
   ovs_db:
     loglevel: "info"
 
@@ -34,4 +36,7 @@ sources:
     git_ref: v0.17.0
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
+    git_ref: master
+  openstack/networking-generic-switch:
+    git_url: https://github.com/openstack/networking-generic-switch
     git_ref: master

@@ -57,10 +57,14 @@ service:
           type: single
           command: openstack endpoint create --region RegionOne network admin  http://{{ address('neutron-server') }}:{{ neutron.server_port.cont }}
       daemon:
-        command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+        command: >-
+                 neutron-server --config-file /etc/neutron/neutron.conf
+                 --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+                 --config-file /etc/neutron/plugins/ml2/ml2_conf_genericswitch.ini
         files:
           - neutron.conf
           - ml2-conf.ini
+          - ml2-conf-genericswitch.ini
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
@@ -69,4 +73,8 @@ files:
   ml2-conf.ini:
     path: /etc/neutron/plugins/ml2/ml2_conf.ini
     content: ml2_conf.ini.j2
+    perm: "0600"
+  ml2-conf-genericswitch.ini:
+    path: /etc/neutron/plugins/ml2/ml2_conf_genericswitch.ini
+    content: ml2_conf_genericswitch.ini.j2
     perm: "0600"
