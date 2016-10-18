@@ -23,3 +23,6 @@ sources:
   openstack/neutron:
     git_url: https://github.com/openstack/neutron.git
     git_ref: stable/newton
+  openstack/networking-generic-switch:
+    git_url: https://github.com/openstack/networking-generic-switch
+    git_ref: master
