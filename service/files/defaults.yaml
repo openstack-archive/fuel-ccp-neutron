@@ -4,7 +4,8 @@ configs:
       password: password
       name: neutron
       username: neutron
-    server_port: 9696
+    server_port:
+      cont: 9696
     bridge_name: "br-ex"
     external_interface: "eth2"
     logging_debug: false
