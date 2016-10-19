@@ -14,6 +14,9 @@ configs:
       connection: "unix:/run/openvswitch/db.sock"
     enable_lbaas: false
     enable_qos: false
+    calico:
+      etcd_host: "etcd-k8s"
+      etcd_port: 2379
   ovs_db:
     loglevel: "info"
 
@@ -21,3 +24,12 @@ sources:
   openstack/neutron:
     git_url: https://github.com/openstack/neutron.git
     git_ref: stable/newton
+  projectcalico/calico:
+    git_url: https://github.com/projectcalico/felix.git
+    git_ref: 1.4.3
+  projectcalico/libcalico:
+    git_url: https://github.com/projectcalico/libcalico.git
+    git_ref: v0.17.0
+  openstack/networking-calico:
+    git_url: https://github.com/openstack/networking-calico.git
+    git_ref: master

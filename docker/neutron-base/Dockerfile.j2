@@ -11,9 +11,13 @@ RUN apt-get -y install --no-install-recommends \
         openvswitch-switch \
         uuid-runtime \
         mysql-client \
+        net-tools \
     && apt-get clean
 
 {{ copy_sources("openstack/neutron", "/neutron") }}
+{{ copy_sources("projectcalico/libcalico", "/libcalico") }}
+{{ copy_sources("projectcalico/calico", "/calico") }}
+{{ copy_sources("openstack/networking-calico", "/networking-calico") }}
 
 RUN cd /neutron \
     && useradd --user-group neutron \
@@ -31,5 +35,13 @@ COPY neutron_sudoers /etc/sudoers.d/neutron_sudoers
 RUN usermod -a -G microservices neutron \
     && chmod 750 /etc/sudoers.d \
     && chmod 440 /etc/sudoers.d/neutron_sudoers
+
+RUN /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /libcalico \
+    && rm -rf /libcalico \
+    && mkdir -p /var/log/calico /etc/calico \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /calico \
+    && rm -rf /calico \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico \
+    && rm -rf /networking-calico
 
 ENV PATH /var/lib/microservices/venv/bin:$PATH
