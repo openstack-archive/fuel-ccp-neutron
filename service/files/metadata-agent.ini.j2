@@ -1,5 +1,5 @@
 # metadata_agent.ini
 [DEFAULT]
 nova_metadata_ip = {{ address('nova-api') }}
-nova_metadata_port = {{ nova.metadata.port }}
+nova_metadata_port = {{ nova.metadata.port.cont }}
 metadata_proxy_shared_secret = {{ nova.metadata.secret }}
