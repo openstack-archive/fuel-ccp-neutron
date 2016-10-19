@@ -36,12 +36,12 @@ RUN usermod -a -G microservices neutron \
     && chmod 750 /etc/sudoers.d \
     && chmod 440 /etc/sudoers.d/neutron_sudoers
 
-RUN /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /libcalico \
+RUN /var/lib/microservices/venv/bin/pip install --upgrade /libcalico \
     && rm -rf /libcalico \
     && mkdir -p /var/log/calico /etc/calico \
-    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /calico \
+    && /var/lib/microservices/venv/bin/pip install --upgrade /calico \
     && rm -rf /calico \
-    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade /networking-calico \
+    && /var/lib/microservices/venv/bin/pip install --upgrade /networking-calico \
     && rm -rf /networking-calico
 
 ENV PATH /var/lib/microservices/venv/bin:$PATH
