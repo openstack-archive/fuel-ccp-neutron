@@ -6,6 +6,7 @@ configs:
       username: neutron
     server_port:
       cont: 9696
+      ingress: network
     bridge_name: "br-ex"
     external_interface: "eth2"
     logging_debug: false
