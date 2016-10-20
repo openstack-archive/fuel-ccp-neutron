@@ -59,6 +59,25 @@ service:
         files:
           - neutron.conf
           - ml2-conf.ini
+      post:
+        - name: neutron-bootstrap-router
+          type: single
+          command: openstack router create {{ neutron.bootstrap.router.name }}
+        - name: neutron-bootstrap-int-net
+          type: single
+          dependencies:
+            - neutron-bootstrap-int-net
+          files:
+            - neutron-bootstrap-int-net
+          command: /home/neutron/neutron-bootstrap-int-net.sh
+        - name: neutron-bootstrap-ext-net
+          type: single
+          dependencies:
+            - neutron-bootstrap-router
+          files:
+            - neutron-bootstrap-ext-net
+          command: /home/neutron/neutron-bootstrap-ext-net.sh
+
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
@@ -68,3 +87,11 @@ files:
     path: /etc/neutron/plugins/ml2/ml2_conf.ini
     content: ml2_conf.ini.j2
     perm: "0600"
+  neutron-bootstrap-int-net:
+    path: /home/neutron/neutron-bootstrap-int-net.sh
+    content: neutron-bootstrap-int-net.sh.j2
+    perm: "0700"
+  neutron-bootstrap-ext-net:
+    path: /home/neutron/neutron-bootstrap-ext-net.sh
+    content: neutron-bootstrap-ext-net.sh.j2
+    perm: "0700"
