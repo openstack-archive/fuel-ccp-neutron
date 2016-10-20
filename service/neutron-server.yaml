@@ -59,6 +59,12 @@ service:
         files:
           - neutron.conf
           - ml2-conf.ini
+      post:
+        - name: neutron-bootstrap
+          type: single
+          files:
+            - neutron-bootstrap.sh
+          command: /home/neutron/neutron-bootstrap.sh
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
@@ -68,3 +74,7 @@ files:
     path: /etc/neutron/plugins/ml2/ml2_conf.ini
     content: ml2_conf.ini.j2
     perm: "0600"
+  neutron-bootstrap.sh:
+    path: /home/neutron/neutron-bootstrap.sh
+    content: neutron-bootstrap.sh.j2
+    perm: "0700"
