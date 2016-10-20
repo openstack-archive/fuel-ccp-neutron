@@ -61,6 +61,49 @@ service:
         files:
           - neutron.conf
           - ml2-conf.ini
+      post:
+        - name: neutron-bootstrap-router
+          type: single
+          command: openstack router create {{ neutron.bootstrap.router.name }}
+
+        # {% set int = neutron.bootstrap.internal %}
+        # {% if int.enable %}
+        - name: neutron-bootstrap-int-net-create
+          type: single
+          command: openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+        - name: neutron-bootstrap-int-net-subnet-create
+          type: single
+          dependencies:
+            - neutron-bootstrap-int-net-create
+          command: openstack subnet create --subnet-range {{ int.network }} --gateway {{ int.gateway }} --network {{ int.net_name }} {{ int.subnet_name }}
+        - name: neutron-bootstrap-int-net-add-route
+          type: single
+          dependencies:
+            - neutron-bootstrap-router
+            - neutron-bootstrap-int-net-subnet-create
+          command: openstack router add subnet {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
+        # {% endif %}
+
+        # {% set ext = neutron.bootstrap.external %}
+        # {% if ext.enable %}
+        # {% if "changeme" not in [ext.network, ext.physnet, ext.gateway, ext.nameserver, ext.pool.start, ext.pool.end] %}
+        - name: neutron-bootstrap-ext-net-create
+          type: single
+          command: openstack network create --default --external --share --provider-network-type flat --provider-physical-network {{ ext.physnet }} {{ ext.net_name }}
+        - name: neutron-bootstrap-ext-subnet-create
+          type: single
+          dependencies:
+            - neutron-bootstrap-ext-net-create
+          command: openstack subnet create --subnet-range {{ ext.network }} --no-dhcp --gateway auto --network {{ ext.net_name }} --allocation-pool start={{ ext.pool.start }},end={{ ext.pool.end }} --dns-nameserver {{ ext.nameserver }} {{ ext.subnet_name }}
+        - name: neutron-bootstrap-ext-net-set-gateway
+          type: single
+          dependencies:
+            - neutron-bootstrap-router
+            - neutron-bootstrap-ext-subnet-create
+          command: neutron router-gateway-set {{ neutron.bootstrap.router.name }} {{ ext.net_name }}
+        # {% endif %}
+        # {% endif %}
+
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
