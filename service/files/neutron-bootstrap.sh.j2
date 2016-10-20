@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -ex
+
+export OS_IDENTITY_API_VERSION=3
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PASSWORD={{ openstack.user_password }}
+export OS_USERNAME={{ openstack.user_name }}
+export OS_PROJECT_NAME={{ openstack.project_name }}
+export OS_AUTH_URL="http://{{ address('keystone') }}:{{ keystone.admin_port }}/v3"
+
+{% set router = neutron.bootstrap.router %}
+openstack router create {{ router.name }}
+
+{% if neutron.bootstrap.internal.enable %}
+{% set int = neutron.bootstrap.internal %}
+openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+openstack subnet create --subnet-range {{ int.cidr }} --gateway {{ int.gateway }} --network {{ int.net_name }} {{ int.subnet_name }}
+openstack router add subnet {{ router.name }} {{ int.subnet_name }}
+{% endif %}
+
+{% if neutron.bootstrap.external.enable %}
+{% set ext = neutron.bootstrap.external %}
+openstack network create --default --external --share --provider-network-type flat --provider-physical-network physnet1 {{ ext.net_name }}
+openstack subnet create --subnet-range {{ ext.cidr }} --no-dhcp --gateway auto --network {{ ext.net_name }} --allocation-pool start={{ ext.pool.start }},end={{ ext.pool.end }} --dns-nameserver {{ ext.nameserver }} {{ ext.subnet_name }}
+neutron router-gateway-set {{ router.name }} {{ ext.net_name }}
+{% endif %}
