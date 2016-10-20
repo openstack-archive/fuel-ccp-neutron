@@ -17,6 +17,27 @@ configs:
     calico:
       etcd_host: "etcd-k8s"
       etcd_port: 2379
+
+    bootstrap:
+      external:
+        enable: false
+        net_name: ext-net
+        subnet_name: ext-subnet
+        cidr: 10.95.0.0/24
+        gateway: 10.95.0.1
+        nameserver: 8.8.8.8
+        pool:
+          start: 10.95.0.10
+          end: 10.95.0.250
+      internal:
+        enable: true
+        net_name: int-net
+        subnet_name: int-subnet
+        cidr: 10.0.0.0/24
+        gateway: 10.0.0.2
+      router:
+        name: ext-router
+
   ovs_db:
     loglevel: "info"
 
