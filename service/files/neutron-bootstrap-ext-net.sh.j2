@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -ex
+
+export OS_IDENTITY_API_VERSION=3
+export OS_INTERFACE="internal"
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PASSWORD={{ openstack.user_password }}
+export OS_USERNAME={{ openstack.user_name }}
+export OS_PROJECT_NAME={{ openstack.project_name }}
+export OS_AUTH_URL="http://{{ address('keystone') }}:{{ keystone.admin_port.cont }}/v3"
+
+{% set ext = neutron.bootstrap.external %}
+
+{% if changeme in [ext.network, ext.gateway, ext.nameserver, ext.pool.start, ext.pool.end] %}
+    echo "External network is not configured, please check 'configs.neutron.bootstrap' parameters"
+    exit 1
+{% endif %}
+
+{% if ext.enable %}
+openstack network create --default --external --share --provider-network-type flat --provider-physical-network physnet1 {{ ext.net_name }}
+openstack subnet create --subnet-range {{ ext.network }} --no-dhcp --gateway auto --network {{ ext.net_name }} --allocation-pool start={{ ext.pool.start }},end={{ ext.pool.end }} --dns-nameserver {{ ext.nameserver }} {{ ext.subnet_name }}
+neutron router-gateway-set {{ neutron.bootstrap.router.name }} {{ ext.net_name }}
+{% endif %}

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -ex
+
+export OS_IDENTITY_API_VERSION=3
+export OS_INTERFACE="internal"
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PASSWORD={{ openstack.user_password }}
+export OS_USERNAME={{ openstack.user_name }}
+export OS_PROJECT_NAME={{ openstack.project_name }}
+export OS_AUTH_URL="http://{{ address('keystone') }}:{{ keystone.admin_port.cont }}/v3"
+
+{% set int = neutron.bootstrap.internal %}
+
+{% if int.enable %}
+openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+openstack subnet create --subnet-range {{ int.network }} --gateway {{ int.gateway }} --network {{ int.net_name }} {{ int.subnet_name }}
+openstack router add subnet {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
+{% endif %}
