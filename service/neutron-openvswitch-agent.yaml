@@ -1,7 +1,7 @@
 service:
   name: neutron-openvswitch-agent
+  kind: DaemonSet
   host-net: true
-  daemonset: true
   containers:
     - name: neutron-openvswitch-agent
       image: neutron-openvswitch-agent

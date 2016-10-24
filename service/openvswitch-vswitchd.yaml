@@ -1,7 +1,7 @@
 service:
   name: openvswitch-vswitchd
+  kind: DaemonSet
   host-net: true
-  daemonset: true
   containers:
     - name: openvswitch-vswitchd
       image: openvswitch-vswitchd
