@@ -1,6 +1,6 @@
 service:
   name: neutron-metadata-agent
-  host-net: true
+  hostNetwork: true
   containers:
     - name: neutron-metadata-agent
       image: neutron-metadata-agent

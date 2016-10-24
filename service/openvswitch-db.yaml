@@ -1,7 +1,7 @@
 service:
   name: openvswitch-db
   kind: DaemonSet
-  host-net: true
+  hostNetwork: true
   containers:
     - name: openvswitch-db
       image: openvswitch-db
