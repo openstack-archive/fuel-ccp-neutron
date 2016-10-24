@@ -1,7 +1,7 @@
 service:
   name: calico-dhcp-agent
   kind: DaemonSet
-  host-net: true
+  hostNetwork: true
   containers:
     - name: calico-dhcp-agent
       image: calico-dhcp-agent

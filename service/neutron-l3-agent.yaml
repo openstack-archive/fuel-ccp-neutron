@@ -1,6 +1,6 @@
 service:
   name: neutron-l3-agent
-  host-net: true
+  hostNetwork: true
   containers:
     - name: neutron-l3-agent
       image: neutron-l3-agent

@@ -1,6 +1,6 @@
 service:
   name: neutron-dhcp-agent
-  host-net: true
+  hostNetwork: true
   containers:
     - name: neutron-dhcp-agent
       image: neutron-dhcp-agent
