@@ -7,7 +7,9 @@ service:
       image: neutron-server
       probes:
         readiness: "true"
-        liveness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
       pre:
         - name: neutron-db-create
           dependencies:
