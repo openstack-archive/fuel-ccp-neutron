@@ -66,7 +66,7 @@ user_domain_id = default
 project_name = service
 username = {{ neutron.db.username }}
 password = {{ neutron.db.password }}
-memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
+memcached_servers = {{ address('memcached', memcached.port, multiple=True) | join(',') }}
 
 [oslo_messaging_notifications]
 driver = noop
