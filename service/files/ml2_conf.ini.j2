@@ -61,5 +61,5 @@ local_ip = {{ network_topology["private"]["address"] }}
 {% if neutron.plugin_agent == "calico" %}
 [calico]
 etcd_host = {{ neutron.calico.etcd_host }}
-etcd_port = {{ neutron.calico.etcd_port.cont }}
+etcd_port = {{ neutron.calico.etcd_port }}
 {% endif %}
