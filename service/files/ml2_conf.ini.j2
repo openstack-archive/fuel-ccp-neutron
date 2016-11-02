@@ -21,11 +21,23 @@ mechanism_drivers = calico
 extension_drivers = qos
 {% endif %}
 
+{% set vlan, flat, bm, im = [], [], [], [] -%}
+{% for net in neutron.physnets -%}
+{% if net.vlan_range -%}
+{% set _ = vlan.append(net.name + ":" + net.vlan_range) -%}
+{% endif -%}
+{% if net.flat -%}
+{% set _ = flat.append(net.name) -%}
+{% endif -%}
+{% set _ = bm.append(net.name + ":" + net.bridge_name) -%}
+{% set _ = im.append(net.name + ":" + net.interface) -%}
+{% endfor -%}
+
 [ml2_type_vlan]
-network_vlan_ranges =
+network_vlan_ranges = {{ vlan|join(",") }}
 
 [ml2_type_flat]
-flat_networks = physnet1
+flat_networks = {{ flat|join(",") }}
 
 [ml2_type_vxlan]
 vni_ranges = 1:1000
@@ -47,11 +59,10 @@ arp_responder = true
 [ovs]
 ovsdb_interface = {{ neutron.ovsdb.interface }}
 ovsdb_connection = {{ neutron.ovsdb.connection }}
-bridge_mappings = physnet1:{{ neutron.bridge_name }}
+bridge_mappings = {{ bm|join(",") }}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 [linux_bridge]
-physical_interface_mappings = physnet1:{{ neutron.external_interface }}
-
+physical_interface_mappings = {{ im|join(",") }}
 
 [vxlan]
 l2_population = true
