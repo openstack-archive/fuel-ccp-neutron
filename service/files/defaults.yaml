@@ -7,8 +7,12 @@ configs:
     server_port:
       cont: 9696
       ingress: network
-    bridge_name: "br-ex"
-    external_interface: "eth2"
+    physnets:
+      - name: "physnet1"
+        bridge_name: "br-ex"
+        interface: "eth2"
+        flat: true
+        vlan_range: false
     logging_debug: false
     plugin_agent: "openvswitch"
     ovsdb:
