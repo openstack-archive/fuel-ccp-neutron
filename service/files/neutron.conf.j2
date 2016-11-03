@@ -20,7 +20,7 @@ interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
 {% endif %}
 
 allow_overlapping_ips = true
-core_plugin = ml2
+core_plugin = {{ neutron.core_plugin }}
 service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
 
 {% if neutron.enable_lbaas %}

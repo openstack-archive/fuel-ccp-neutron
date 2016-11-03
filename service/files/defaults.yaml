@@ -7,6 +7,7 @@ configs:
     server_port:
       cont: 9696
       ingress: network
+    core_plugin: "ml2"
     bridge_name: "br-ex"
     external_interface: "eth2"
     logging_debug: false
