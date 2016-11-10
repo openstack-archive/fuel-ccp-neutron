@@ -45,7 +45,7 @@ service:
           dependencies:
             - neutron-service-create
           type: single
-          command: openstack endpoint create --region RegionOne network public http://{{ address('neutron-server', neutron.server_port, external=True) }}
+          command: openstack endpoint create --region RegionOne network public {{ address('neutron-server', neutron.server_port, external=True, with_scheme=True) }}
         - name: neutron-internal-endpoint-create
           dependencies:
             - neutron-service-create
