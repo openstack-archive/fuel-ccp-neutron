@@ -1,0 +1,32 @@
+upgrade:
+  name: upgrade-neutron
+  image: neutron-server
+  steps:
+    - name: expand
+      command: neutron-db-manage upgrade --expand
+      files:
+        - neutron.conf
+    - name: kill-server
+      type: kill-services
+      services: [neutron-server]
+    - name: contract
+      command: neutron-db-manage upgrade --contract
+      files:
+        - neutron.conf
+    - name: roll-server
+      type: rolling-upgrade
+      services: [neutron-server]
+    - name: roll-l2
+      type: rolling-upgrade
+      services: [neutron-openvswitch-agent]
+    - name: roll-agents
+      type: rolling-upgrade
+      services:
+        - neutron-l3-agent
+        - neutron-dhcp-agent
+        - neutron-metadata-agent
+files:
+  neutron.conf:
+    path: /etc/neutron/neutron.conf
+    content: neutron.conf.j2
+    perm: "0600"
