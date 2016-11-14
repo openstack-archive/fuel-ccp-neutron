@@ -23,9 +23,17 @@ extension_drivers = qos
 
 [ml2_type_vlan]
 network_vlan_ranges =
+{%- for net in neutron.physnets if net.vlan_range -%}
+{%- if not loop.first %},{% endif -%}
+{{ net.name }}:{{ net.vlan_range }}
+{%- endfor %}
 
 [ml2_type_flat]
-flat_networks = physnet1
+flat_networks =
+{%- for net in neutron.physnets if net.flat -%}
+{%- if not loop.first %},{% endif -%}
+{{ net.name }}
+{%- endfor %}
 
 [ml2_type_vxlan]
 vni_ranges = 1:1000
@@ -47,11 +55,18 @@ arp_responder = true
 [ovs]
 ovsdb_interface = {{ neutron.ovsdb.interface }}
 ovsdb_connection = {{ neutron.ovsdb.connection }}
-bridge_mappings = physnet1:{{ neutron.bridge_name }}
+bridge_mappings =
+{%- for net in neutron.physnets -%}
+{%- if not loop.first %},{% endif -%}
+{{ net.name }}:{{ net.bridge_name }}
+{%- endfor %}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 [linux_bridge]
-physical_interface_mappings = physnet1:{{ neutron.external_interface }}
-
+physical_interface_mappings =
+{%- for net in neutron.physnets -%}
+{%- if not loop.first %},{% endif -%}
+{{ net.name }}:{{ net.interface }}
+{%- endfor %}
 
 [vxlan]
 l2_population = true

@@ -28,10 +28,12 @@ service:
           dependencies:
             - vswitchd-bootstrap
             - openvswitch-db:local
-        - name: vswitchd-setup-ovs-bridge
-          command: /usr/local/bin/ovs-ensure-configured.sh {{ neutron.bridge_name }} {{ neutron.external_interface }}
+        # {% raw %}{% for net in neutron.physnets %}
+        - name: vswitchd-setup-ovs-bridge-{{ net.name }}
+          command: /usr/local/bin/ovs-ensure-configured.sh {{ net.bridge_name }} {{ net.interface }}
           dependencies:
             - vswitchd-check-ovs-db
+        # {% endfor %}{% endraw %}
       daemon:
         command: /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
         dependencies:
