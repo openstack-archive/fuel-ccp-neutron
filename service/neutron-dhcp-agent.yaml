@@ -1,5 +1,6 @@
 service:
   name: neutron-dhcp-agent
+  kind: DaemonSet
   hostNetwork: true
   containers:
     - name: neutron-dhcp-agent
