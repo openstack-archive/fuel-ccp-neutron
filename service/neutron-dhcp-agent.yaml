@@ -1,5 +1,6 @@
 service:
   name: neutron-dhcp-agent
+  kind: DaemonSet
   hostNetwork: true
   containers:
     - name: neutron-dhcp-agent
@@ -17,6 +18,9 @@ service:
         - name: metadata-socket
           type: host
           path: /var/lib/neutron/ccp
+        - name: netns
+          type: host
+          path: /run/netns
       daemon:
         command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini
         dependencies:
