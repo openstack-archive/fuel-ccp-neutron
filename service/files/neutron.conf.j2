@@ -52,6 +52,7 @@ rabbit_hosts = {{ address('rabbitmq') }}:{{ rabbitmq.port.cont }}
 
 [agent]
 root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
+root_helper_daemon = sudo neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
 
 [database]
 connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address('mariadb') }}/{{ neutron.db.name }}
