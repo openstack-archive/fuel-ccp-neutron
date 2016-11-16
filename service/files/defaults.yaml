@@ -73,6 +73,18 @@ configs:
       cont: 8181
     username: admin
     password: password
+    karaf:
+      features_boot:
+        - odl-neutron-service
+        - odl-neutron-logger
+        - odl-restconf-all
+        - odl-aaa-authn
+        - odl-dlux-core
+        - odl-mdsal-apidocs
+        - odl-netvirt-openstack
+        - odl-ovsdb-ui
+    logging:
+      max_file_size: 1024GB
 
 sources:
   openstack/neutron:
@@ -92,7 +104,9 @@ sources:
     git_ref: stable/newton
 
 versions:
+  karaf_version: "0.5.3-SNAPSHOT"
   ovs_version: "system"
 
 url:
   ovs: http://openvswitch.org/releases
+  opendaylight: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
