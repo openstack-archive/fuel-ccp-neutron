@@ -1,0 +1,23 @@
+dsl_version: 0.1.0
+service:
+  name: opendaylight
+  ports:
+    - {{ opendaylight.api_port }}
+    - {{ opendaylight.ovs_port }}
+    - {{ opendaylight.openflow_port1 }}
+    - {{ opendaylight.openflow_port2 }}
+    - {{ opendaylight.dlux_port }}
+  containers:
+    - name: opendaylight
+      image: opendaylight
+      probes:
+        readiness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
+      volumes:
+        - name: ovs-socket
+          type: host
+          path: /run/openvswitch
+      daemon:
+        command: ./bin/karaf

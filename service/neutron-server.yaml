@@ -1,6 +1,7 @@
 dsl_version: 0.1.0
 service:
   name: neutron-server
+  hostNetwork: true
   ports:
     - {{ neutron.server_port }}
   containers:
@@ -62,6 +63,8 @@ service:
         files:
           - neutron.conf
           - ml2-conf.ini
+        dependencies:
+          - openvswitch-vswitchd
       post:
         - name: neutron-bootstrap-router
           type: single
