@@ -48,6 +48,14 @@ configs:
 
   ovs_db:
     loglevel: "info"
+  opendaylight:
+    karaf_version: "0.5.0-Boron"
+    api_port:
+      cont: 8080
+    ovs_port:
+      cont: 6640
+    openflow_port:
+      cont: 6633
 
 sources:
   openstack/neutron:
@@ -61,4 +69,7 @@ sources:
     git_ref: v0.17.0
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
+    git_ref: master
+  openstack/networking-odl:
+    git_url: https://github.com/openstack/networking-odl.git
     git_ref: master
