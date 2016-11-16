@@ -90,7 +90,9 @@ sources:
     git_ref: stable/newton
 
 versions:
+  karaf_version: "0.5.3-SNAPSHOT"
   ovs_version: "system"
 
 url:
   ovs: http://openvswitch.org/releases
+  opendaylight: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
