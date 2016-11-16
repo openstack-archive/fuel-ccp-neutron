@@ -1,0 +1,9 @@
+curl -Lo maven-metadata.xml https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf/{{ karaf_version }}/maven-metadata.xml
+
+BUNDLE_TIMESTAMP=`xpath -e "//snapshotVersion[extension='tar.gz'][1]/value/text()" maven-metadata.xml 2>/dev/null`
+curl -Lo distribution-karaf-{{ karaf_version }}.tar.gz https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf/{{ karaf_version }}/distribution-karaf-${BUNDLE_TIMESTAMP}.tar.gz
+tar -xvzf distribution-karaf-{{ karaf_version }}.tar.gz
+rm -rf distribution-karaf-{{ karaf_version }}.tar.gz
+
+sed -i '/^featuresBoot=/ s/$/,odl-neutron-service,odl-neutron-logger,odl-restconf-all,odl-aaa-authn,odl-dlux-core,odl-mdsal-apidocs,odl-netvirt-openstack,odl-ovsdb-ui/' ./distribution-karaf-{{ karaf_version }}/etc/org.apache.karaf.features.cfg
+sed -i "/^log4j\.appender\.out\.maxFileSize/ s/.*/log4j\.appender\.out\.maxFileSize\=1024GB/" ./distribution-karaf-{{ karaf_version }}/etc/org.ops4j.pax.logging.cfg
