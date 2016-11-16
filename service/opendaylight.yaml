@@ -1,0 +1,34 @@
+dsl_version: 0.1.0
+service:
+  name: opendaylight
+  ports:
+    - {{ opendaylight.api_port }}
+    - {{ opendaylight.ovs_port }}
+    - {{ opendaylight.openflow_port1 }}
+    - {{ opendaylight.openflow_port2 }}
+    - {{ opendaylight.dlux_port }}
+  containers:
+    - name: opendaylight
+      image: opendaylight
+      probes:
+        readiness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
+      volumes:
+        - name: ovs-socket
+          type: host
+          path: /run/openvswitch
+      daemon:
+        command: ./bin/karaf
+        files:
+          - odl-wait-boot.sh
+      post:
+        - name: odl_boot_wait
+          command: /usr/local/bin/odl-wait-boot.sh
+
+files:
+  odl-wait-boot.sh:
+    path: /usr/local/bin/odl-wait-boot.sh
+    content: odl-wait-boot.sh.j2
+    perm: "0755"
