@@ -1,0 +1,13 @@
+#!/bin/bash -ex
+
+odl_port={{ opendaylight.ovs_port.cont }}
+odl_boot_wait_url=restconf/operational/network-topology:network-topology/topology/netvirt:1
+
+odl_boot_wait_timeout=60
+odl_retry_check_interval=5
+
+testcmd="curl -o /dev/null --fail --silent --head -u \
+         admin:admin http://127.0.0.1:${odl_port}/${odl_boot_wait_url}"
+
+timeout $odl_boot_wait_timeout sh -c "while ! $testcmd; do sleep $odl_retry_check_interval; done"
+exit $?

@@ -1,6 +1,7 @@
 dsl_version: 0.1.0
 service:
   name: neutron-server
+  hostNetwork: true
   ports:
     - {{ neutron.server_port }}
   containers:
@@ -57,6 +58,11 @@ service:
         files:
           - neutron.conf
           - ml2-conf.ini
+        # {% if neutron.plugin_agent == "opendaylight" %}
+        dependencies:
+          - openvswitch-vswitchd
+        # {% endif %}
+
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
