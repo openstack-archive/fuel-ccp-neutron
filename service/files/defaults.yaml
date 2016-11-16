@@ -60,6 +60,31 @@ configs:
 
   ovs_db:
     loglevel: "info"
+  opendaylight:
+    api_port:
+      cont: 8080
+    ovs_port:
+      cont: 6640
+    openflow_port1:
+      cont: 6633
+    openflow_port2:
+      cont: 6653
+    dlux_port:
+      cont: 8181
+    username: admin
+    password: password
+    karaf:
+      features_boot:
+        - odl-neutron-service
+        - odl-neutron-logger
+        - odl-restconf-all
+        - odl-aaa-authn
+        - odl-dlux-core
+        - odl-mdsal-apidocs
+        - odl-netvirt-openstack
+        - odl-ovsdb-ui
+    logging:
+      max_file_size: 1024GB
 
 sources:
   openstack/neutron:
@@ -74,9 +99,14 @@ sources:
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
     git_ref: master
+  openstack/networking-odl:
+    git_url: https://github.com/openstack/networking-odl.git
+    git_ref: stable/newton
 
 versions:
+  karaf_version: "0.5.3-SNAPSHOT"
   ovs_version: "system"
 
 url:
   ovs: http://openvswitch.org/releases
+  opendaylight: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
