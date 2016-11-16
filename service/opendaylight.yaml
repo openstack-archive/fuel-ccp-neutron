@@ -20,9 +20,19 @@ service:
         command: ./bin/karaf
         files:
           - odl-wait-boot.sh
+          - org.apache.karaf.features.cfg
+          - org.ops4j.pax.logging.cfg
 
 files:
   odl-wait-boot.sh:
     path: /usr/local/bin/odl-wait-boot.sh
     content: odl-wait-boot.sh.j2
     perm: "0755"
+  org.apache.karaf.features.cfg:
+    path: /odl/distribution-karaf/etc/org.apache.karaf.features.cfg
+    content: org.apache.karaf.features.cfg.j2
+    perm: "0600"
+  org.ops4j.pax.logging.cfg:
+    path: /odl/distribution-karaf/etc/org.ops4j.pax.logging.cfg
+    content: org.ops4j.pax.logging.cfg.j2
+    perm: "0600"
