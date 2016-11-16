@@ -1,7 +1,17 @@
 upgrade:
   name: upgrade-neutron
-  image: neutron-server
+  image: neutron-base
   steps:
+    - name: backup
+      command: /tmp/backup.sh
+      files:
+        - backup-sh
+      volumes:
+        - name: backup-dir
+          path: /var/ccp/backup/neutron
+          type: host
+          readOnly: false
+      topology_key: backup
     - name: expand
       command: neutron-db-manage upgrade --expand
       files:
@@ -30,3 +40,7 @@ files:
     path: /etc/neutron/neutron.conf
     content: neutron.conf.j2
     perm: "0600"
+  backup-sh:
+    path: /tmp/backup.sh
+    content: backup.sh.j2
+    perm: "555"

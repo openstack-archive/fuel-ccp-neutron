@@ -1,0 +1,6 @@
+#!/bin/bash -ex
+set -o pipefail
+BACKUP_FILE="/var/ccp/backup/neutron/backup-$(date -uIseconds | cut -f1 -d+).sql"
+mysqldump -h {{ address('mariadb') }} \
+    -u {{ neutron.db.username }} -p{{ neutron.db.password }} \
+    --single-transaction {{ neutron.db.name }} > "${BACKUP_FILE}"
