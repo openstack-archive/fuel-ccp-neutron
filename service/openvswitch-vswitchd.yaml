@@ -7,6 +7,10 @@ service:
     - name: openvswitch-vswitchd
       image: openvswitch-vswitchd
       privileged: true
+      # {% if neutron.plugin_agent == "opendaylight" %}
+      probes:
+        readiness: "ovs-vsctl list Bridge | grep br-int > /dev/null"
+      # {% endif %}
       volumes:
         - name: ovs-socket
           type: host
@@ -24,20 +28,38 @@ service:
           dependencies:
             - vswitchd-bootstrap
             - openvswitch-db:local
+            # {% if neutron.plugin_agent == "opendaylight" %}
+            - opendaylight
+            # {% endif %}
+        # {% if neutron.plugin_agent != "opendaylight" %}
         # {% for net in neutron.physnets %}
         - name: vswitchd-setup-ovs-bridge-{{ net.name }}
           command: /usr/local/bin/ovs-ensure-configured.sh {{ net.bridge_name }} {{ net.interface }}
           dependencies:
             - vswitchd-check-ovs-db
         # {% endfor %}
+        # {% endif %}
       daemon:
         command: /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
         dependencies:
           - openvswitch-db:local
+          # {% if neutron.plugin_agent == "opendaylight" %}
+          - opendaylight
+          # {% endif %}
         files:
           - ovs-ensure-configured.sh
+      # {% if neutron.plugin_agent == "opendaylight" %}
+          - ovs-set-managed-by-odl.sh
+      post:
+        - name: ovs-set-managed-by-odl
+          command: /usr/local/bin/ovs-set-managed-by-odl.sh
+      # {% endif %}
 files:
   ovs-ensure-configured.sh:
     path: /usr/local/bin/ovs-ensure-configured.sh
     content: ovs-ensure-configured.sh
+    perm: "0755"
+  ovs-set-managed-by-odl.sh:
+    path: /usr/local/bin/ovs-set-managed-by-odl.sh
+    content: ovs-set-managed-by-odl.sh.j2
     perm: "0755"
