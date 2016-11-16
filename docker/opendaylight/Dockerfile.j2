@@ -1,0 +1,17 @@
+FROM {{ image_spec("base-tools") }}
+MAINTAINER {{ maintainer }}
+
+ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64/
+
+RUN apt-get -y install --no-install-recommends openjdk-8-jre
+
+RUN mkdir /odl
+WORKDIR /odl
+
+RUN curl -Lo distribution-karaf-{{ karaf_version }}.tar.gz https://nexus.opendaylight.org/content/groups/public/org/opendaylight/integration/distribution-karaf/{{ karaf_version }}/distribution-karaf-{{ karaf_version }}.tar.gz && \
+    tar -xvzf distribution-karaf-{{ karaf_version }}.tar.gz && \
+    rm -rf distribution-karaf-{{ karaf_version }}.tar.gz && \
+    sed -i '/^featuresBoot=/ s/$/,odl-neutron-service,odl-neutron-logger,odl-restconf-all,odl-aaa-authn,odl-dlux-core,odl-mdsal-apidocs,odl-ovsdb-openstack/' ./distribution-karaf-{{ karaf_version }}/etc/org.apache.karaf.features.cfg && \
+    sed -i "/^log4j\.appender\.out\.maxFileSize/ s/.*/log4j\.appender\.out\.maxFileSize\=1024GB/" ./distribution-karaf-{{ karaf_version }}/etc/org.ops4j.pax.logging.cfg
+
+WORKDIR /odl/distribution-karaf-{{ karaf_version }}
