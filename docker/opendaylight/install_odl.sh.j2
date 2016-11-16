@@ -1,0 +1,6 @@
+curl -Lo maven-metadata.xml {{ url.opendaylight }}/{{ karaf_version }}/maven-metadata.xml
+
+BUNDLE_TIMESTAMP=`xpath -e "//snapshotVersion[extension='tar.gz'][1]/value/text()" maven-metadata.xml 2>/dev/null`
+curl -Lo distribution-karaf.tar.gz {{ url.opendaylight }}/{{ karaf_version }}/distribution-karaf-${BUNDLE_TIMESTAMP}.tar.gz
+tar -xvzf distribution-karaf.tar.gz
+rm -rf distribution-karaf.tar.gz
