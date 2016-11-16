@@ -54,6 +54,18 @@ configs:
     loglevel: "info"
   ovs:
     download_url: http://openvswitch.org/releases
+  opendaylight:
+    api_port:
+      cont: 8080
+    ovs_port:
+      cont: 6640
+    openflow_port1:
+      cont: 6633
+    openflow_port2:
+      cont: 6653
+    dlux_port:
+      cont: 8181
+      node: 30000
 
 sources:
   openstack/neutron:
@@ -68,6 +80,10 @@ sources:
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
     git_ref: master
+  openstack/networking-odl:
+    git_url: https://git.openstack.org/openstack/networking-odl.git
+    git_ref: stable/newton
 
 versions:
+  karaf_version: "0.5.2-SNAPSHOT"
   ovs_version: "system"
