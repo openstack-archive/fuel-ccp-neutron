@@ -13,7 +13,7 @@ endpoint_type = internalURL
 
 metadata_proxy_socket = /var/lib/neutron/ccp/metadata_proxy
 
-{% if neutron.plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent in ["openvswitch", "opendaylight"] %}
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 {% elif neutron.plugin_agent == "linuxbridge" %}
 interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
@@ -21,7 +21,7 @@ interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
 
 allow_overlapping_ips = true
 core_plugin = {{ neutron.core_plugin }}
-service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
+service_plugins = {% if neutron.plugin_agent == "opendaylight" %}odl-router{% else %}router{% endif %}{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
 
 {% if neutron.enable_lbaas %}
 [service_providers]
