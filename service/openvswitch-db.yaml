@@ -19,7 +19,7 @@ service:
         - name: ovs-bootstrap
           command: /opt/ccp/bin/openvswitch-db-bootstrap.sh
       daemon:
-        command: "/usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:{{ ovs_db.loglevel }} --remote=punix:/run/openvswitch/db.sock"
+        command: "/usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:{{ ovs_db.loglevel }} --remote=punix:/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options"
         files:
           - openvswitch-db-bootstrap.sh
 files:
