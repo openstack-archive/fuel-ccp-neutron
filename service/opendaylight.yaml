@@ -1,0 +1,16 @@
+service:
+  name: opendaylight
+  ports:
+    - {{ opendaylight.api_port }}
+    - {{ opendaylight.ovs_port }}
+    - {{ opendaylight.openflow_port }}
+  containers:
+    - name: opendaylight
+      image: opendaylight
+      probes:
+        readiness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
+      daemon:
+        command: ./bin/start
