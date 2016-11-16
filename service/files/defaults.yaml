@@ -88,3 +88,4 @@ versions:
 
 url:
   ovs: http://openvswitch.org/releases
+  opendaylight: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
