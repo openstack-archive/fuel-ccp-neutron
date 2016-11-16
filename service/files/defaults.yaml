@@ -55,6 +55,7 @@ configs:
   ovs:
     download_url: http://openvswitch.org/releases
   opendaylight:
+    download_url: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
     api_port:
       cont: 8080
     ovs_port:
