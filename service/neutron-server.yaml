@@ -13,9 +13,9 @@ service:
       pre:
         - name: neutron-db-create
           dependencies:
-            - mariadb
+            - {{ service.database }}
           type: single
-          command: mysql -u root -p{{ db.root_password }} -h {{ address('mariadb') }} -e 'create database `{{ neutron.db.name }}`;
+          command: mysql -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ neutron.db.name }}`;
                    grant all privileges on `{{ neutron.db.name }}`.* to "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"'
         - name: neutron-db-sync
           type: single

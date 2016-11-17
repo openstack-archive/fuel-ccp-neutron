@@ -55,7 +55,7 @@ root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 root_helper_daemon = sudo neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
 
 [database]
-connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address('mariadb') }}/{{ neutron.db.name }}
+connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address(service.database) }}/{{ neutron.db.name }}
 max_retries = -1
 
 [keystone_authtoken]
