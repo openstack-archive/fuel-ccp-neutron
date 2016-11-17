@@ -28,7 +28,8 @@ RUN cd /neutron \
     && cp /neutron/etc/api-paste.ini /usr/share/neutron \
     && mv /etc/neutron/neutron/ /etc/neutron/plugins/ \
     && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
-    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf
+    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf \
+    && rm -rf /neutron
 
 COPY neutron_sudoers /etc/sudoers.d/neutron_sudoers
 
