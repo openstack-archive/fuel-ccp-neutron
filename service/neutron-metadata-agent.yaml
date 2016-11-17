@@ -1,3 +1,4 @@
+version: 0.1.0
 service:
   name: neutron-metadata-agent
   hostNetwork: true
