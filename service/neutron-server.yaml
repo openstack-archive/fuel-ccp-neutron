@@ -64,24 +64,24 @@ service:
       post:
         - name: neutron-bootstrap-router
           type: single
-          command: openstack router create {{ neutron.bootstrap.router.name }}
+          command: neutron --os-endpoint-type internal router-create {{ neutron.bootstrap.router.name }}
 
         # {% set int = neutron.bootstrap.internal %}
         # {% if int.enable %}
         - name: neutron-bootstrap-int-net-create
           type: single
-          command: openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+          command: neutron --os-endpoint-type internal net-create {{ int.net_name }}
         - name: neutron-bootstrap-int-net-subnet-create
           type: single
           dependencies:
             - neutron-bootstrap-int-net-create
-          command: openstack subnet create --subnet-range {{ int.network }} --gateway {{ int.gateway }} --network {{ int.net_name }} {{ int.subnet_name }}
+          command: neutron --os-endpoint-type internal subnet-create --name {{ int.subnet_name }} --gateway {{ int.gateway }} {{ int.net_name }} {{ int.network }}
         - name: neutron-bootstrap-int-net-add-route
           type: single
           dependencies:
             - neutron-bootstrap-router
             - neutron-bootstrap-int-net-subnet-create
-          command: openstack router add subnet {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
+          command: neutron --os-endpoint-type internal router-interface-add {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
         # {% endif %}
 
         # {% set ext = neutron.bootstrap.external %}
