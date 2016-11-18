@@ -1,0 +1,9 @@
+Code-Review+2: Proskurin Kirill <kproskurin@mirantis.com>
+Code-Review+2: Sergey Lukjanov <slukjanov@mirantis.com>
+Workflow+1: Sergey Lukjanov <slukjanov@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 18 Nov 2016 17:41:31 +0000
+Reviewed-on: https://review.openstack.org/398644
+Project: openstack/fuel-ccp-neutron
+Branch: refs/heads/master
