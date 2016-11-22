@@ -100,7 +100,7 @@ service:
           dependencies:
             - neutron-bootstrap-router
             - neutron-bootstrap-ext-subnet-create
-          command: neutron router-gateway-set {{ neutron.bootstrap.router.name }} {{ ext.net_name }}
+          command: neutron --os-endpoint-type internal router-gateway-set {{ neutron.bootstrap.router.name }} {{ ext.net_name }}
         # {% endif %}
         # {% endif %}
 
