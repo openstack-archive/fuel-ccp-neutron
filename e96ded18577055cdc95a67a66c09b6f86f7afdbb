@@ -1,0 +1,10 @@
+Code-Review+2: Sergey Reshetnyak <sreshetniak@mirantis.com>
+Code-Review+1: Elena Ezhova <eezhova@mirantis.com>
+Code-Review+2: Yuriy Taraday <yorik.sar@gmail.com>
+Workflow+1: Yuriy Taraday <yorik.sar@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 30 Nov 2016 14:34:07 +0000
+Reviewed-on: https://review.openstack.org/404748
+Project: openstack/fuel-ccp-neutron
+Branch: refs/heads/master
