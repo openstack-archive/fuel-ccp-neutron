@@ -17,9 +17,7 @@ mechanism_drivers = linuxbridge,l2population
 mechanism_drivers = calico
 {% endif %}
 
-{% if neutron.enable_qos %}
-extension_drivers = qos
-{% endif %}
+extension_drivers = port_security{% if neutron.enable_qos %},qos{% endif %}
 
 [ml2_type_vlan]
 network_vlan_ranges =
