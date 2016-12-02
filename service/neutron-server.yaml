@@ -90,7 +90,7 @@ service:
         # {% if "changeme" not in [ext.network, ext.physnet, ext.gateway, ext.nameserver, ext.pool.start, ext.pool.end] %}
         - name: neutron-bootstrap-ext-net-create
           type: single
-          command: openstack network create --default --external --share --provider-network-type flat --provider-physical-network {{ ext.physnet }} {{ ext.net_name }}
+          command: openstack network create --default --external --provider-network-type flat --provider-physical-network {{ ext.physnet }} {{ ext.net_name }}
         - name: neutron-bootstrap-ext-subnet-create
           type: single
           dependencies:
