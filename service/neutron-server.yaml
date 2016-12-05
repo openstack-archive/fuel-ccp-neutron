@@ -51,12 +51,12 @@ service:
           dependencies:
             - neutron-service-create
           type: single
-          command: openstack endpoint create --region RegionOne network internal http://{{ address('neutron-server') }}:{{ neutron.server_port.cont }}
+          command: openstack endpoint create --region RegionOne network internal {{ address('neutron-server', neutron.server_port, with_scheme=True) }}
         - name: neutron-admin-endpoint-create
           dependencies:
             - neutron-service-create
           type: single
-          command: openstack endpoint create --region RegionOne network admin  http://{{ address('neutron-server') }}:{{ neutron.server_port.cont }}
+          command: openstack endpoint create --region RegionOne network admin {{ address('neutron-server', neutron.server_port, with_scheme=True) }}
       daemon:
         command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
         files:
