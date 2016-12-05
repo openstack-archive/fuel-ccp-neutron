@@ -41,8 +41,9 @@ configs:
         enable: true
         net_name: int-net
         subnet_name: int-subnet
-        network: 10.0.1.0/24
-        gateway: 10.0.1.1
+        subnetpool_name: int-default-pool
+        pool_prefix: 10.50.0.0/16
+        subnet_prefix_length: 24
       router:
         name: ext-router
 
