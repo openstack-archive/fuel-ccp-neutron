@@ -53,7 +53,7 @@ service:
           dependencies:
             - neutron-bootstrap-int-net-create
             - neutron-bootstrap-int-net-subnetpool-create
-          command: openstack subnet create --use-default-subnet-pool --network {{ int.net_name }} {{ int.subnet_name }}
+          command: openstack subnet create --use-default-subnet-pool {% for svc in int.dns_servers %} --dns-nameserver {{ svc }} {% endfor %} --network {{ int.net_name }} {{ int.subnet_name }}
         - name: neutron-bootstrap-int-net-add-route
           type: single
           dependencies:
