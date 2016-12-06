@@ -44,6 +44,9 @@ configs:
         subnetpool_name: int-default-pool
         pool_prefix: 10.50.0.0/16
         subnet_prefix_length: 24
+        dns_servers:
+          - 8.8.8.8
+          - 8.8.4.4
       router:
         name: ext-router
 
