@@ -2,8 +2,8 @@
 [DEFAULT]
 debug = {{ neutron.logging_debug }}
 
-use_stderr = True
-use_syslog = False
+use_stderr = true
+use_syslog = false
 
 bind_host = {{ network_topology["private"]["address"] }}
 bind_port = {{ neutron.server_port.cont }}
