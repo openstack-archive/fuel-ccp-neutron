@@ -20,7 +20,7 @@ service:
           type: host
           path: /var/lib/neutron/ccp
       daemon:
-        command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3_agent.ini --config-file /etc/neutron/fwaas_driver.ini --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+        command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3_agent.ini --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
         dependencies:
           - neutron-db-sync
           - rabbitmq
@@ -28,7 +28,6 @@ service:
           - neutron.conf
           - ml2-conf.ini
           - l3-agent.ini
-          - fwaas-driver.ini
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf
@@ -41,8 +40,4 @@ files:
   l3-agent.ini:
     path: /etc/neutron/l3_agent.ini
     content: l3_agent.ini.j2
-    perm: "0600"
-  fwaas-driver.ini:
-    path: /etc/neutron/fwaas_driver.ini
-    content: fwaas_driver.ini.j2
     perm: "0600"
