@@ -70,4 +70,8 @@ password = {{ neutron.db.password }}
 memcached_servers = {{ address('memcached', memcached.port) }}
 
 [oslo_messaging_notifications]
+{% if searchlight is defined and (searchlight.services.neutron or searchlight.services.nova) %}
+driver = {{ searchlight.notification_driver }}
+{% else %}
 driver = noop
+{% endif %}
