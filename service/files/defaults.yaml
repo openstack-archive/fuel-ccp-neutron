@@ -51,7 +51,7 @@ configs:
 
 sources:
   openstack/neutron:
-    git_url: https://github.com/openstack/neutron.git
+    git_url: https://git.openstack.org/openstack/neutron.git
     git_ref: stable/newton
   projectcalico/calico:
     git_url: https://github.com/projectcalico/felix.git
