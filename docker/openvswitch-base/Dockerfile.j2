@@ -1,7 +1,18 @@
 FROM {{ image_spec("base-tools") }}
 MAINTAINER {{ maintainer }}
 
+{% if ovs_version == "system" %}
 RUN apt-get -y install --no-install-recommends \
         openvswitch-switch \
     && apt-get clean
-
+{% else %}
+RUN apt-get -y install --no-install-recommends gcc libc6-dev libssl-dev libcap-ng-dev make module-init-tools && \
+    curl -Lo openvswitch-{{ ovs_version }}.tar.gz {{ ovs.download_url }}/openvswitch-{{ ovs_version }}.tar.gz && \
+    tar -xvzf openvswitch-{{ ovs_version }}.tar.gz && \
+    rm -rf openvswitch-{{ ovs_version }}.tar.gz && \
+    cd openvswitch-{{ ovs_version }} && \
+    ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc && \
+    make && make install && \
+    apt-get purge -y gcc libc6-dev libssl-dev libcap-ng-dev && \
+    apt-get clean
+{% endif %}

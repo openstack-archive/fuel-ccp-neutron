@@ -52,6 +52,8 @@ configs:
 
   ovs_db:
     loglevel: "info"
+  ovs:
+    download_url: http://openvswitch.org/releases
 
 sources:
   openstack/neutron:
@@ -66,3 +68,6 @@ sources:
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
     git_ref: master
+
+versions:
+  ovs_version: "system"
