@@ -7,11 +7,6 @@ service:
     - name: calico-felix
       image: calico-felix
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       daemon:
         command: calico-felix --config-file=/etc/calico/felix.cfg
         dependencies:

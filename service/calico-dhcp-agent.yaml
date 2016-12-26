@@ -7,11 +7,6 @@ service:
     - name: calico-dhcp-agent
       image: calico-dhcp-agent
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: metadata-socket
           type: host

@@ -6,11 +6,6 @@ service:
   containers:
     - name: openvswitch-db
       image: openvswitch-db
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: ovs-socket
           type: host

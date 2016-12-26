@@ -7,11 +7,6 @@ service:
     - name: openvswitch-vswitchd
       image: openvswitch-vswitchd
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: ovs-socket
           type: host

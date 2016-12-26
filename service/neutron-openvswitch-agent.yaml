@@ -7,11 +7,6 @@ service:
     - name: neutron-openvswitch-agent
       image: neutron-openvswitch-agent
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: ovs-socket
           type: host

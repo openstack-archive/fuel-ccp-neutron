@@ -6,11 +6,6 @@ service:
     - name: neutron-metadata-agent
       image: neutron-metadata-agent
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: metadata-socket
           type: host

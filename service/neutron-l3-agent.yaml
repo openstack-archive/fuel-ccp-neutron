@@ -7,11 +7,6 @@ service:
     - name: neutron-l3-agent
       image: neutron-l3-agent
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: ovs-socket
           type: host

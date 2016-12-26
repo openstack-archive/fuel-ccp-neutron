@@ -6,11 +6,6 @@ service:
   containers:
     - name: neutron-server
       image: neutron-server
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       pre:
         - name: neutron-db-create
           dependencies:
