@@ -17,7 +17,7 @@ service:
         command: neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/metadata-agent.ini
         dependencies:
           - neutron-db-sync
-          - rabbitmq
+          - "{{ messaging.dependencies[messaging.backend.rpc] }}"
         files:
           - neutron.conf
           - ml2-conf.ini
