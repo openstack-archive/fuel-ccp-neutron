@@ -42,14 +42,6 @@ endpoint_type = internal
 [oslo_concurrency]
 lock_path = /var/lib/neutron/tmp
 
-[oslo_messaging_rabbit]
-rabbit_userid = {{ rabbitmq.user }}
-rabbit_password = {{ rabbitmq.password }}
-rabbit_ha_queues = true
-# Here we should have a list of RBMQ servers, but for now 1 is ok
-# FIXME
-rabbit_hosts = {{ address('rabbitmq', rabbitmq.port) }}
-
 [agent]
 root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 root_helper_daemon = sudo neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
@@ -69,9 +61,11 @@ username = {{ neutron.db.username }}
 password = {{ neutron.db.password }}
 memcached_servers = {{ address('memcached', memcached.port) }}
 
-[oslo_messaging_notifications]
-{% if searchlight is defined and (searchlight.services.neutron or searchlight.services.nova) %}
-driver = {{ searchlight.notification_driver }}
-{% else %}
-driver = noop
-{% endif %}
+{% if searchlight is defined and (searchlight.services.neutron or searchlight.services.nova) -%}
+ [oslo_messaging_notifications]
+ driver = {{ searchlight.notification_driver }}
+{%- endif %}
+
+{# messaging macros templates #}
+{{ oslomsg[messaging.backend.notifications]('notifications_config') }}
+{{ oslomsg[messaging.backend.rpc]('rpc_config') }}
