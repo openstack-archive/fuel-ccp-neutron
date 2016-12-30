@@ -17,7 +17,7 @@ service:
       daemon:
         command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini
         dependencies:
-          - neutron-db-sync
+          - neutron-db-create-and-sync
           - rabbitmq
         files:
           - neutron.conf
