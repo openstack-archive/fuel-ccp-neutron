@@ -1,7 +1,8 @@
 FROM {{ image_spec("openstack-base") }}
 MAINTAINER {{ maintainer }}
 
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update \
+    && apt-get -y install --no-install-recommends \
         iputils-arping \
         conntrack \
         dnsmasq \
