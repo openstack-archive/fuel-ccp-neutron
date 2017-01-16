@@ -16,6 +16,17 @@ service:
           - neutron.conf
           - ml2-conf.ini
           - felix.cfg
+      # {% set int = neutron.bootstrap.internal %}
+      # {% if int.enable %}
+      # {% if     neutron.plugin_agent == 'calico' %}
+      post:
+        - name: neutron-bootstrap-int-net-create
+          type: single
+          dependencies:
+            - neutron-server
+          command: openstack network create --provider-network-type local {{ int.net_name }}
+      # {%        endif %}
+      # {% endif %}
 files:
   neutron.conf:
     path: /etc/neutron/neutron.conf

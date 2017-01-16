@@ -32,11 +32,13 @@ service:
 
         # {% set int = neutron.bootstrap.internal %}
         # {% if int.enable %}
+        # {% if     neutron.plugin_agent == 'vxlan' %}
         - name: neutron-bootstrap-int-net-create
           type: single
           dependencies:
             - neutron-server
           command: openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+        # {%        endif %}
         - name: neutron-bootstrap-int-net-subnetpool-create
           type: single
           dependencies:
