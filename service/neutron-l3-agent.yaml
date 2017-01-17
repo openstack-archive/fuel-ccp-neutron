@@ -32,7 +32,7 @@ service:
 
         # {% set int = neutron.bootstrap.internal %}
         # {% if int.enable %}
-        # {% if     neutron.plugin_agent == 'vxlan' %}
+        # {% if     neutron.plugin_agent == 'openvswitch' %}
         - name: neutron-bootstrap-int-net-create
           type: single
           dependencies:
