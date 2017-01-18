@@ -28,7 +28,7 @@ service:
           type: single
           dependencies:
             - neutron-server
-          command: openstack router create {{ neutron.bootstrap.router.name }}
+          command: neutron --os-endpoint-type internal router-create {{ neutron.bootstrap.router.name }}
 
         # {% set int = neutron.bootstrap.internal %}
         # {% if int.enable %}
@@ -37,25 +37,25 @@ service:
           type: single
           dependencies:
             - neutron-server
-          command: openstack network create --provider-network-type vxlan --provider-segment 77 {{ int.net_name }}
+          command: neutron --os-endpoint-type internal net-create --provider:network_type vxlan --provider:segmentation_id 77 {{ int.net_name }}
         # {%        endif %}
         - name: neutron-bootstrap-int-net-subnetpool-create
           type: single
           dependencies:
             - neutron-server
-          command: openstack subnet pool create {{ int.subnetpool_name }} --default-prefix-length {{ int.subnet_prefix_length }} --pool-prefix {{ int.pool_prefix }} --share --default
+          command: neutron --os-endpoint-type internal subnetpool-create --default-prefixlen {{ int.subnet_prefix_length }} --pool-prefix {{ int.pool_prefix }} --shared --is-default True {{ int.subnetpool_name }}
         - name: neutron-bootstrap-int-net-subnet-create
           type: single
           dependencies:
             - neutron-bootstrap-int-net-create
             - neutron-bootstrap-int-net-subnetpool-create
-          command: openstack subnet create --use-default-subnet-pool {% for svc in int.dns_servers %} --dns-nameserver {{ svc }} {% endfor %} --network {{ int.net_name }} {{ int.subnet_name }}
+          command: neutron --os-endpoint-type internal subnet-create --use-default-subnetpool {% for svc in int.dns_servers %} --dns-nameserver {{ svc }} {% endfor %} --name {{ int.subnet_name }} {{ int.net_name }}
         - name: neutron-bootstrap-int-net-add-route
           type: single
           dependencies:
             - neutron-bootstrap-router
             - neutron-bootstrap-int-net-subnet-create
-          command: openstack router add subnet {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
+          command: neutron --os-endpoint-type internal router-interface-add {{ neutron.bootstrap.router.name }} {{ int.subnet_name }}
         # {% endif %}
 
         # {% set ext = neutron.bootstrap.external %}
@@ -65,12 +65,12 @@ service:
           type: single
           dependencies:
             - neutron-server
-          command: openstack network create --default --external --provider-network-type flat --provider-physical-network {{ ext.physnet }} {{ ext.net_name }}
+          command: neutron --os-endpoint-type internal net-create --router:external=True --share --provider:network_type flat --provider:physical_network {{ ext.physnet }} {{ ext.net_name }}
         - name: neutron-bootstrap-ext-subnet-create
           type: single
           dependencies:
             - neutron-bootstrap-ext-net-create
-          command: openstack subnet create --subnet-range {{ ext.network }} --no-dhcp --gateway auto --network {{ ext.net_name }} --allocation-pool start={{ ext.pool.start }},end={{ ext.pool.end }} --dns-nameserver {{ ext.nameserver }} {{ ext.subnet_name }}
+          command: neutron --os-endpoint-type internal subnet-create --name {{ ext.subnet_name }} --disable-dhcp --allocation-pool start={{ ext.pool.start }},end={{ ext.pool.end }} --dns-nameserver {{ ext.nameserver }} {{ ext.net_name }} {{ ext.network }}
         - name: neutron-bootstrap-ext-net-set-gateway
           type: single
           dependencies:
