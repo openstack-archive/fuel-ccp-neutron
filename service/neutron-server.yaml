@@ -3,6 +3,9 @@ service:
   name: neutron-server
   ports:
     - {{ neutron.server_port }}
+  annotations:
+    service:
+      prometheus.io/probe: "true"
   containers:
     - name: neutron-server
       image: neutron-server
