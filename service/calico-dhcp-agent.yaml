@@ -11,6 +11,9 @@ service:
         - name: metadata-socket
           type: host
           path: /var/lib/neutron/ccp
+        - name: calico-certs
+          type: host
+          path: {{ neutron.calico.etcd_cert_dir }}
       daemon:
         command: calico-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
         dependencies:
