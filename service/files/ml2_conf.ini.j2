@@ -75,4 +75,9 @@ local_ip = {{ network_topology["private"]["address"] }}
 [calico]
 etcd_host = {{ neutron.calico.etcd_host }}
 etcd_port = {{ neutron.calico.etcd_port }}
+{% if neutron.calico.etcd_tls %}
+etcd_cert_file = {{ neutron.calico.etcd_cert_file }}
+etcd_key_file = {{ neutron.calico.etcd_key_file }}
+etcd_ca_cert_file = {{ neutron.calico.etcd_ca_cert_file }}
+{% endif %}
 {% endif %}

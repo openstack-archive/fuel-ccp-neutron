@@ -24,6 +24,11 @@ configs:
     calico:
       etcd_host: "etcd-k8s"
       etcd_port: 2379
+      etcd_tls: true
+      etcd_cert_dir: "/etc/calico/certs"
+      etcd_cert_file: "/etc/calico/certs/cert.crt"
+      etcd_key_file: "/etc/calico/certs/key.pem"
+      etcd_ca_cert_file: "/etc/calico/certs/ca_cert.crt"
 
     bootstrap:
       external:
