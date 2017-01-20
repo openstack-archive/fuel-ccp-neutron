@@ -9,6 +9,12 @@ service:
   containers:
     - name: neutron-server
       image: neutron-server
+      # {% if neutron.plugin_agent == 'calico' and neutron.calico.etcd_cert_dir %}
+      volumes:
+        - name: calico-certs
+          type: host
+          path: {{ neutron.calico.etcd_cert_dir }}
+      # {% endif %}
       pre:
         - name: neutron-db-create
           dependencies:
