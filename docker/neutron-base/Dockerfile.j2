@@ -22,7 +22,7 @@ RUN apt-get update \
 
 RUN cd /neutron \
     && useradd --user-group neutron \
-    && /var/lib/microservices/venv/bin/pip install --upgrade /neutron \
+    && /var/lib/microservices/venv/bin/pip install /neutron \
     && mkdir -p /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
     && cp -r /neutron/etc/* /etc/neutron/ \
     && cp -r /neutron/etc/neutron/* /etc/neutron/ \
@@ -37,12 +37,12 @@ RUN usermod -a -G microservices neutron \
     && chmod 750 /etc/sudoers.d \
     && chmod 440 /etc/sudoers.d/neutron_sudoers
 
-RUN /var/lib/microservices/venv/bin/pip install --upgrade /libcalico \
+RUN /var/lib/microservices/venv/bin/pip install /libcalico \
     && rm -rf /libcalico \
     && mkdir -p /var/log/calico /etc/calico \
-    && /var/lib/microservices/venv/bin/pip install --upgrade /calico \
+    && /var/lib/microservices/venv/bin/pip install /calico \
     && rm -rf /calico \
-    && /var/lib/microservices/venv/bin/pip install --upgrade /networking-calico \
+    && /var/lib/microservices/venv/bin/pip install /networking-calico \
     && rm -rf /networking-calico
 
 ENV PATH /var/lib/microservices/venv/bin:$PATH
