@@ -8,6 +8,9 @@ configs:
       cont: 9696
       ingress: network
     core_plugin: "ml2"
+    ml2:
+      tenant_network_types:
+        - "vxlan"
     physnets:
       - name: "physnet1"
         bridge_name: "br-ex"
