@@ -10,6 +10,7 @@ configs:
     core_plugin: "ml2"
     ml2:
       tenant_network_types: "vxlan"
+      vni_ranges: "1:1000"
     physnets:
       - name: "physnet1"
         bridge_name: "br-ex"
