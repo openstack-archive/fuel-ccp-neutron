@@ -6,7 +6,7 @@ type_drivers = local, flat
 tenant_network_types = local
 {% else %}
 type_drivers = flat,vlan,vxlan
-tenant_network_types = vxlan
+tenant_network_types = {{ neutron.ml2.tenant_network_types }}
 {% endif %}
 
 {% if neutron.plugin_agent == "openvswitch" %}
