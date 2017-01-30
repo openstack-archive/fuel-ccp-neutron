@@ -16,6 +16,7 @@ configs:
         vlan_range: false
     logging_debug: false
     plugin_agent: "openvswitch"
+    dvr: false
     ovsdb:
       interface: "native"
       connection: "unix:/run/openvswitch/db.sock"

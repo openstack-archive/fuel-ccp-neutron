@@ -1,4 +1,4 @@
 # l3_agent.ini
 [DEFAULT]
-agent_mode = legacy
+agent_mode = {% if neutron.dvr %} dvr_snat {% else %} legacy {% endif %}
 external_network_bridge =

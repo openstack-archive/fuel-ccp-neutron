@@ -24,6 +24,12 @@ dhcp_agents_per_network = 2
 core_plugin = {{ neutron.core_plugin }}
 service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
 
+{% if neutron.dvr %}
+# System-wide flag to determine the type of router that tenants can create. Only admin can override. (boolean value)
+#router_distributed = false
+router_distributed = True
+{% endif %}
+
 {% if neutron.enable_lbaas %}
 [service_providers]
 service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default

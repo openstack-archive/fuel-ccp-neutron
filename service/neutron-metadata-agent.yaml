@@ -1,6 +1,9 @@
 dsl_version: 0.1.0
 service:
   name: neutron-metadata-agent
+  {% if neutron.dvr %}
+  kind: DaemonSet
+  {% endif %}
   hostNetwork: true
   containers:
     - name: neutron-metadata-agent
