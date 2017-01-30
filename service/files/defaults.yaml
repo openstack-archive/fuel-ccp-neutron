@@ -24,6 +24,7 @@ configs:
     logging_debug: false
     plugin_agent: "openvswitch"
     l3_ha: false
+    dvr: false
     ovsdb:
       interface: "native"
       connection: "unix:/run/openvswitch/db.sock"
