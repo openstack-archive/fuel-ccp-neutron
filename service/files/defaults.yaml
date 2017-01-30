@@ -71,3 +71,9 @@ sources:
   openstack/networking-calico:
     git_url: https://github.com/openstack/networking-calico.git
     git_ref: master
+
+versions:
+  ovs_version: "system"
+
+url:
+  ovs: http://openvswitch.org/releases
