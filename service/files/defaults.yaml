@@ -4,6 +4,8 @@ configs:
       password: password
       name: neutron
       username: neutron
+      max_pool_size: 10
+      max_overflow: 50
     server_port:
       cont: 9696
       ingress: network

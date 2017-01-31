@@ -50,6 +50,8 @@ root_helper_daemon = sudo neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
 [database]
 connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address(service.database) }}/{{ neutron.db.name }}
 max_retries = -1
+max_pool_size = {{ neutron.db.max_pool_size }}
+max_overflow = {{ neutron.db.max_overflow }}
 
 [keystone_authtoken]
 auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}
