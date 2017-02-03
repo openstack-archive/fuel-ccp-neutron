@@ -24,6 +24,14 @@ dhcp_agents_per_network = 2
 core_plugin = {{ neutron.core_plugin }}
 service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
 
+
+# Enable HA mode for virtual routers. (boolean value)
+l3_ha = {{ neutron.l3_ha }}
+
+# If it is set to 0 then the ha router will be scheduled on every L3 agent.
+max_l3_agents_per_router=0
+
+
 {% if neutron.enable_lbaas %}
 [service_providers]
 service_provider = LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
