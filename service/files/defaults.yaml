@@ -15,6 +15,9 @@ configs:
         - "vxlan"
       vni_ranges:
         - "1:1000"
+    dhcp_agent:
+      enable_isolated_metadata: true
+      enable_metadata_network: true
     physnets:
       - name: "physnet1"
         bridge_name: "br-ex"
