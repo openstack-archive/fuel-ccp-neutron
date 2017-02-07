@@ -17,9 +17,18 @@ service:
         - name: ovs-socket
           type: host
           path: /run/openvswitch
+        - name: hugepages
+          type: host
+          path: /dev/hugepages
         - name: modules
           type: host
           path: /lib/modules
+        - name: dev
+          type: host
+          path: /dev
+        - name: sys
+          type: host
+          path: /sys
       pre:
         - name: vswitchd-bootstrap
           command: modprobe openvswitch
@@ -45,9 +54,14 @@ service:
           # {% endif %}
         files:
           - ovs-ensure-configured.sh
+          - ovs-set-bridge-ip.sh
       # {% if neutron.plugin_agent == "opendaylight" %}
           - ovs-set-managed-by-odl.sh
+      # {% endif %}
       post:
+        - name: ovs-set-bridge-ip
+          command: /usr/local/bin/ovs-set-bridge-ip.sh
+      # {% if neutron.plugin_agent == "opendaylight" %}
         - name: ovs-set-managed-by-odl
           command: /usr/local/bin/ovs-set-managed-by-odl.sh
       # {% endif %}
@@ -59,4 +73,8 @@ files:
   ovs-set-managed-by-odl.sh:
     path: /usr/local/bin/ovs-set-managed-by-odl.sh
     content: ovs-set-managed-by-odl.sh.j2
+    perm: "0755"
+  ovs-set-bridge-ip.sh:
+    path: /usr/local/bin/ovs-set-bridge-ip.sh
+    content: ovs-set-bridge-ip.sh.j2
     perm: "0755"
