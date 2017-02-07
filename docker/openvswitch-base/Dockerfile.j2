@@ -2,19 +2,85 @@ FROM {{ image_spec("base-tools") }}
 MAINTAINER {{ maintainer }}
 
 {% if ovs_version == "system" %}
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update && apt-get -y install --no-install-recommends \
         openvswitch-switch \
     && apt-get clean
+{% elif dpdk_version != "none" %}
+RUN apt-get update && apt-get -y install --no-install-recommends \
+        openvswitch-switch \
+        gcc \
+        libc6-dev \
+        libssl-dev \
+        libcap-ng-dev \
+        libatomic1 \
+        pciutils \
+        make \
+        module-init-tools \
+        xz-utils \
+    && echo Installing DPDK \
+    && curl -LO {{ url.dpdk }}/dpdk-{{ dpdk_version }}.tar.xz \
+    && tar -xf dpdk-{{ dpdk_version }}.tar.xz \
+    && rm -f dpdk-{{ dpdk_version }}.tar.xz \
+    && rename "s/-stable//" dpdk-* \
+    && cd dpdk-{{ dpdk_version }} \
+    && sed -i "/UIO\\|KMOD\\|KNI\\|POWER/s/=.*/=n/" config/common_linuxapp \
+    && make install T=x86_64-native-linuxapp-gcc DESTDIR=install \
+    && cd tools \
+    && install dpdk-devbind.py dpdk-pmdinfo.py /usr/bin \
+    && cd ../.. \
+    \
+    && echo Installing OVS \
+    && curl -LO {{ url.ovs }}/openvswitch-{{ ovs_version }}.tar.gz \
+    && tar -xf openvswitch-{{ ovs_version }}.tar.gz \
+    && rm -f openvswitch-{{ ovs_version }}.tar.gz \
+    && cd openvswitch-{{ ovs_version }} \
+    && ./configure \
+        --with-dpdk=../dpdk-{{ dpdk_version }}/x86_64-native-linuxapp-gcc \
+        --prefix=/usr \
+        --localstatedir=/var \
+        --sysconfdir=/etc \
+    && make && make install && make clean \
+    && cd .. \
+    \
+    && echo Cleanup \
+    && rm -rf dpdk-{{ dpdk_version }} \
+    && rm -rf openvswitch-{{ ovs_version }} \
+    && apt-get purge -y \
+      gcc \
+      libc6-dev \
+      make \
+      xz-utils \
+    && apt-get autoremove -y \
+    && apt-get clean
 {% else %}
-RUN apt-get update && \
-    apt-get -y install --no-install-recommends gcc libc6-dev libssl-dev libcap-ng-dev make module-init-tools && \
-    curl -Lo openvswitch-{{ ovs_version }}.tar.gz {{ url.ovs }}/openvswitch-{{ ovs_version }}.tar.gz && \
-    tar -xvzf openvswitch-{{ ovs_version }}.tar.gz && \
-    rm -rf openvswitch-{{ ovs_version }}.tar.gz && \
-    cd openvswitch-{{ ovs_version }} && \
-    ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc && \
-    make && make install && make clean && \
-    rm -rf openvswitch-{{ ovs_version }} && \
-    apt-get purge -y gcc libc6-dev libssl-dev libcap-ng-dev && \
-    apt-get clean
+RUN apt-get update && apt-get -y install --no-install-recommends \
+        openvswitch-switch \
+        gcc \
+        libc6-dev \
+        libssl-dev \
+        libcap-ng-dev \
+        libatomic1 \
+        make \
+        module-init-tools \
+    && echo Installing OVS \
+    && curl -LO {{ url.ovs }}/openvswitch-{{ ovs_version }}.tar.gz \
+    && tar -xf openvswitch-{{ ovs_version }}.tar.gz \
+    && rm -f openvswitch-{{ ovs_version }}.tar.gz \
+    && cd openvswitch-{{ ovs_version }} \
+    && ./configure \
+        --prefix=/usr \
+        --localstatedir=/var \
+        --sysconfdir=/etc \
+    && make && make install && make clean \
+    && cd .. \
+    \
+    && echo Cleanup \
+    && rm -rf openvswitch-{{ ovs_version }} \
+    && apt-get purge -y \
+      gcc \
+      libc6-dev \
+      make \
+      xz-utils \
+    && apt-get autoremove -y \
+    && apt-get clean
 {% endif %}

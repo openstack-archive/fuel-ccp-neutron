@@ -1,21 +1,74 @@
 #!/bin/bash
+set -ex
+
+{% if True in neutron.physnets|map(attribute="dpdk") %}
+modprobe {{ neutron.dpdk.driver }}
+dpdk_init=$(ovs-vsctl get Open_vSwitch . other_config:dpdk-init \
+            2>/dev/null || true)
+if [ "$dpdk_init" != "True" ]; then
+  dpdk_ifnames={{ neutron.physnets
+      | selectattr("dpdk")
+      | map(attribute="interface")
+      | join("|") }}
+  pci_whitelist=$(dpdk-devbind.py -s \
+      | awk "/ if=($dpdk_ifnames) /{print \" -w \"\$1}")
+  ovs-vsctl --no-wait set Open_vSwitch . \
+      other_config:dpdk-init=True \
+      other_config:dpdk-hugepage-dir={{ neutron.dpdk.hugepages_dir }} \
+      other_config:pmd-cpu-mask={{ neutron.dpdk.pmd_cpu_mask }} \
+      other_config:dpdk-lcore-mask={{ neutron.dpdk.core_cpu_mask }} \
+      other_config:dpdk-mem-channels={{ neutron.dpdk.mem_channels }} \
+      other_config:dpdk-socket-mem={{ neutron.dpdk.socket_mem }} \
+      other_config:dpdk-extra=" --proc-type primary $pci_whitelist "
+fi
+dpdk_ofport=0
+{% endif %}
 
 {% for net in neutron.physnets %}
 
 bridge={{ net.bridge_name }}
-port={{ net.interface }}
 
-ip link set $port up
+{% if net.dpdk %}
+interface={{ net.interface }}
+port_name=dpdk$dpdk_ofport
+dpdk_ofport=$((dpdk_ofport+1))
+{% else %}
+interface={{ net.interface }}
+port_name={{ net.interface }}
+ip link set $interface up
+{% endif %}
 
-ovs-vsctl br-exists $bridge; rc=$?
-if [[ $rc == 2 ]]; then
+if ! ovs-vsctl br-exists $bridge; then
     changed=changed
+    {% if net.dpdk %}
+    ovs-vsctl --no-wait add-br $bridge \
+      -- set Bridge $bridge datapath_type=netdev
+    {% else %}
     ovs-vsctl --no-wait add-br $bridge
+    {% endif %}
 fi
 
-if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port\>") ]]; then
+if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port_name\>") ]]; then
     changed=changed
-    ovs-vsctl --no-wait add-port $bridge $port
+    ip_addrs=$(ip addr show $interface | awk "/inet/{print \$2}"|tr '\n' ' ')
+    {% if net.dpdk %}
+    pci_addr=$(dpdk-devbind.py -s|awk "/ if=$interface /{print \$1}")
+    mac_addr=$(cat /sys/class/net/$interface/address)
+    dpdk_driver={{ neutron.dpdk.driver }}
+
+    dpdk-devbind.py -b $dpdk_driver $pci_addr
+
+    ovs-vsctl --no-wait add-port $bridge $port_name \
+      -- set Interface $port_name \
+        type=dpdk \
+        options:dpdk-devargs=$pci_addr \
+        other_config:pci_address=$pci_addr \
+        other_config:driver=$dpdk_driver
+    ovs-vsctl --no-wait set bridge $bridge other_config:hwaddr=$mac_addr
+    {% else %}
+    ovs-vsctl --no-wait add-port $bridge $port_name
+    {% endif %}
+    ovs-vsctl --no-wait set bridge $bridge other_config:ipaddrs="$ip_addrs"
 fi
 
 echo $changed
