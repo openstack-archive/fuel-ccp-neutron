@@ -80,3 +80,4 @@ versions:
 
 url:
   ovs: http://openvswitch.org/releases
+  dpdk: http://fast.dpdk.org/rel

@@ -7,13 +7,23 @@ RUN apt-get -y install --no-install-recommends \
     && apt-get clean
 {% else %}
 RUN apt-get update && \
-    apt-get -y install --no-install-recommends gcc libc6-dev libssl-dev libcap-ng-dev make module-init-tools && \
+    apt-get -y install --no-install-recommends gcc libc6-dev libssl-dev libcap-ng-dev make module-init-tools xz-utils && \
+    curl -Lo dpdk-{{ dpdk_version }}.tar.xz {{ url.dpdk }}/dpdk-{{ dpdk_version }}.tar.xz && \
+    tar -xvJf dpdk-{{ dpdk_version }}.tar.xz && \
+    rm -rf dpdk-{{ dpdk_version }}.tar.xz && \
+    cd dpdk-{{ dpdk_version }} && \
+    sed -i "/UIO\\|KMOD\\|KNI\\|POWER/s/=.*/=n/" config/common_linuxapp && \
+    make install T=x86_64-native-linuxapp-gcc DESTDIR=install && \
+    cd .. && \
     curl -Lo openvswitch-{{ ovs_version }}.tar.gz {{ url.ovs }}/openvswitch-{{ ovs_version }}.tar.gz && \
     tar -xvzf openvswitch-{{ ovs_version }}.tar.gz && \
     rm -rf openvswitch-{{ ovs_version }}.tar.gz && \
     cd openvswitch-{{ ovs_version }} && \
-    ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc && \
+    ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc \
+    --with-dpdk=../dpdk-{{ dpdk_version }}/x86_64-native-linuxapp-gcc && \
     make && make install && make clean && \
+    cd .. && \
+    rm -rf dpdk-{{ dpdk_version }} && \
     rm -rf openvswitch-{{ ovs_version }} && \
     apt-get purge -y gcc libc6-dev libssl-dev libcap-ng-dev && \
     apt-get clean
