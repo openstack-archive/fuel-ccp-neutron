@@ -22,6 +22,13 @@ configs:
         interface: "eth2"
         flat: true
         vlan_range: false
+        dpdk: false
+    dpdk:
+      driver: vfio-pci
+      pmd_cpu_mask: 4
+      core_cpu_mask: 2
+      mem_channels: 4
+      socket_mem: 2048,2048
     debug: false
     plugin_agent: "openvswitch"
     l3_ha: false
@@ -120,7 +127,9 @@ sources:
 versions:
   karaf_version: "0.5.3-SNAPSHOT"
   ovs_version: "system"
+  dpdk_version: "none"
 
 url:
   ovs: http://openvswitch.org/releases
   opendaylight: https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/org/opendaylight/integration/distribution-karaf
+  dpdk: http://fast.dpdk.org/rel
