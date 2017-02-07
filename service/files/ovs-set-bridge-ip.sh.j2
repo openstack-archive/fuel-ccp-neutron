@@ -1,0 +1,20 @@
+#!/bin/bash
+set -ex
+
+{% for net in neutron.physnets %}
+
+bridge={{ net.bridge_name }}
+port={{ net.interface }}
+
+{% if not net.dpdk %}
+ip addr flush dev $port
+ip link set dev $port up
+{% endif %}
+
+ip_addrs=$(ovs-vsctl get bridge $bridge other_config:ipaddrs|tr -d \")
+for ip_addr in $ip_addrs; do
+  ip addr add $ip_addr dev $bridge
+done
+ip link set dev $bridge up
+
+{% endfor %}
