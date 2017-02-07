@@ -1,4 +1,26 @@
 #!/bin/bash
+set -e
+
+{% if dpdk_version != "none" %}
+dpdk_init=$(ovs-vsctl get Open_vSwitch . other_config:dpdk-init)
+if [ $dpdk_init != "True" ]; then
+  dpdk_ifnames={{ neutron.physnets
+      | selectattr("dpdk")
+      | map(attribute="interface")
+      | join("|") }}
+  pci_whitelist=$(dpdk-devbind.py -s
+      | awk "/ if=($dpdk_ifnames) /{print \" -w \"\$1}")
+  ovs-vsctl --no-wait set Open_vSwitch . \
+      other_config:dpdk-init=True \
+      other_config:dpdk-hugepage-dir={{ neutron.dpdk.hugepages_dir }} \
+      other_config:pmd-cpu-mask={{ neutron.dpdk.pmd_cpu_mask }} \
+      other_config:dpdk-lcore-mask={{ neutron.dpdk.core_cpu_mask }} \
+      other_config:dpdk-mem-channels={{ neutron.dpdk.mem_channels }} \
+      other_config:dpdk-socket-mem={{ neutron.dpdk.socket_mem }} \
+      other_config:vhost-sock-dir={{ neutron.dpdk.vhost_sock_dir }} \
+      other_config:dpdk-extra=" --proc-type primary $pci_whitelist "
+fi
+{% endif %}
 
 {% for net in neutron.physnets %}
 
@@ -10,12 +32,41 @@ ip link set $port up
 ovs-vsctl br-exists $bridge; rc=$?
 if [[ $rc == 2 ]]; then
     changed=changed
-    ovs-vsctl --no-wait add-br $bridge
+    ovs-vsctl --no-wait add-br $bridge \
+    {% if net.dpdk %}
+      -- set Bridge $bridge datapath_type=netdev
+    {% endif %}
+      --
 fi
 
 if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port\>") ]]; then
     changed=changed
-    ovs-vsctl --no-wait add-port $bridge $port
+    ip_addrs=$(ip addr show $port|awk "/inet|inet6/{print \$2}")
+    {% if net.dpdk %}
+    pci_addr=$(dpdk-devbind.py -s|awk "/if=$port/{print \$1}")
+    mac_addr=$(cat /sys/class/net/$port/address)
+    dpdk_driver={{ net.dpdk.driver }}
+
+    dpdk-devbind.py -b $dpdk_driver $pci_addr
+
+    ovs-vsctl set bridge $bridge other_config:hwaddr=$mac_addr
+    ovs-vsctl add-port $bridge $port -- set Interface $port \
+        type=dpdk \
+        other_config:pci_address=$pci_address \
+        other_config:driver=$dpdk_driver
+    {% else %}
+    ovs-vsctl add-port $bridge $port
+    {% endif %}
+
+    {% if not net.dpdk %}
+    ip addr flush dev $port
+    ip link set dev $port up
+    {% endif %}
+
+    for ip_addr in $ip_addrs; do
+      ip addr add $ip_addr dev $bridge
+    done
+    ip link set dev $bridge up
 fi
 
 echo $changed
