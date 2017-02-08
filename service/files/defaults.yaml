@@ -1,5 +1,7 @@
 configs:
   neutron:
+    tls:
+      enabled: true
     db:
       password: password
       name: neutron
