@@ -66,7 +66,7 @@ service:
           type: single
           dependencies:
             - neutron-server
-          command: neutron --os-endpoint-type internal net-create --router:external=True --provider:network_type flat --provider:physical_network {{ ext.physnet }} {{ ext.net_name }}
+          command: neutron --os-endpoint-type internal net-create --router:external=True --share --provider:network_type flat --provider:physical_network {{ ext.physnet }} {{ ext.net_name }}
         - name: neutron-bootstrap-ext-subnet-create
           type: single
           dependencies:

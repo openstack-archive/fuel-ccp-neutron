@@ -4,8 +4,12 @@ debug = {{ neutron.logging_debug }}
 
 use_stderr = true
 use_syslog = false
-
+{% if security.tls.enabled %}
+bind_host = 127.0.0.1
+{% else %}
 bind_host = {{ network_topology["private"]["address"] }}
+{% endif %}
+
 bind_port = {{ neutron.server_port.cont }}
 
 api_paste_config = /usr/share/neutron/api-paste.ini
@@ -23,14 +27,6 @@ allow_overlapping_ips = true
 dhcp_agents_per_network = 2
 core_plugin = {{ neutron.core_plugin }}
 service_plugins = router{% if neutron.enable_lbaas %},neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2{% endif %}{% if neutron.enable_qos %},qos{% endif %}
-
-
-# Enable HA mode for virtual routers. (boolean value)
-l3_ha = {{ neutron.l3_ha }}
-
-# If it is set to 0 then the ha router will be scheduled on every L3 agent.
-max_l3_agents_per_router=0
-
 
 {% if neutron.enable_lbaas %}
 [service_providers]
@@ -64,6 +60,7 @@ max_overflow = {{ neutron.db.max_overflow }}
 [keystone_authtoken]
 auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}
 auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
+cafile = /opt/ccp/etc/tls/ca.pem
 auth_type = password
 project_domain_id = default
 user_domain_id = default
@@ -71,6 +68,16 @@ project_name = service
 username = {{ neutron.db.username }}
 password = {{ neutron.db.password }}
 memcached_servers = {{ address('memcached', memcached.port) }}
+
+[oslo_messaging_rabbit]
+rabbit_ha_queues = false
+{% if security.tls.enabled %}
+rpc_backend = neutron.openstack.common.rpc.impl_kombu
+rabbit_use_ssl = True
+kombu_ssl_ca_certs = /opt/ccp/etc/tls/ca.pem
+kombu_ssl_version="TLSv1_2"
+{% endif %}
+
 
 {% if searchlight is defined and (searchlight.services.neutron or searchlight.services.nova) %}
 [oslo_messaging_notifications]
