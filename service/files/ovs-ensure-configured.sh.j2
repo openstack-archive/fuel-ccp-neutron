@@ -1,7 +1,9 @@
 #!/bin/bash
 
-bridge=$1
-port=$2
+{% for net in neutron.physnets %}
+
+bridge={{ net.bridge_name }}
+port={{ net.interface }}
 
 ip link set $port up
 
@@ -17,3 +19,5 @@ if [[ ! $(ovs-vsctl list-ports $bridge) =~ $(echo "\<$port\>") ]]; then
 fi
 
 echo $changed
+
+{% endfor %}
