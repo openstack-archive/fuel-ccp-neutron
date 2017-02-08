@@ -22,8 +22,8 @@ configs:
         flat: true
         vlan_range: false
     logging_debug: false
-    plugin_agent: "openvswitch"
     l3_ha: false
+    plugin_agent: "openvswitch"
     ovsdb:
       interface: "native"
       connection: "unix:/run/openvswitch/db.sock"
