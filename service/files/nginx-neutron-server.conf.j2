@@ -1,0 +1,9 @@
+server {
+       listen {{ network_topology["private"]["address"] }}:{{ neutron.server_port.cont }};
+       include common/ssl.conf;
+
+       location / {
+           proxy_pass http://neutron_server;
+           include common/proxy-headers.conf;
+       }
+}
