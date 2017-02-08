@@ -4,8 +4,12 @@ debug = {{ neutron.logging_debug }}
 
 use_stderr = true
 use_syslog = false
-
+{% if security.tls.openstack.enabled %}
+bind_host = 127.0.0.1
+{% else %}
 bind_host = {{ network_topology["private"]["address"] }}
+{% endif %}
+
 bind_port = {{ neutron.server_port.cont }}
 
 api_paste_config = /usr/share/neutron/api-paste.ini
@@ -47,6 +51,9 @@ project_name = service
 username = {{ nova.db.username }}
 password = {{ nova.db.password }}
 endpoint_type = internal
+{% if security.tls.openstack.enabled %}
+nova_client_priv_key = /opt/ccp/etc/tls/ca.pem
+{% endif %}
 
 [oslo_concurrency]
 lock_path = /var/lib/neutron/tmp
@@ -64,6 +71,9 @@ max_overflow = {{ neutron.db.max_overflow }}
 [keystone_authtoken]
 auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}
 auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
+{% if security.tls.openstack.enabled %}
+cafile = /opt/ccp/etc/tls/ca.pem
+{% endif %}
 auth_type = password
 project_domain_id = default
 user_domain_id = default
