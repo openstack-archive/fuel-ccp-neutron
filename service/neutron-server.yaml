@@ -15,7 +15,10 @@ service:
             - {{ service.database }}
           type: single
           command: mysql -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ neutron.db.name }}`;
-                   grant all privileges on `{{ neutron.db.name }}`.* to "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"'
+                   create user "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
+                   {% if percona.tls.enabled and security.tls.enabled %} require ssl {% endif %};
+                   grant all privileges on `{{ neutron.db.name }}`.* to "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
+                   {% if percona.tls.enabled and security.tls.enabled %} require ssl {% endif %};'
         - name: neutron-db-sync
           type: single
           command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
