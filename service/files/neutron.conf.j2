@@ -61,16 +61,7 @@ max_retries = -1
 max_pool_size = {{ neutron.db.max_pool_size }}
 max_overflow = {{ neutron.db.max_overflow }}
 
-[keystone_authtoken]
-auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}
-auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
-auth_type = password
-project_domain_id = default
-user_domain_id = default
-project_name = service
-username = {{ neutron.db.username }}
-password = {{ neutron.db.password }}
-memcached_servers = {{ address('memcached', memcached.port) }}
+{{ keystone_authtoken(neutron.username, neutron.password) }}
 
 {% if searchlight is defined and (searchlight.services.neutron or searchlight.services.nova) %}
 [oslo_messaging_notifications]
