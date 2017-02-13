@@ -22,13 +22,10 @@ service:
         - name: vswitchd-check-ovs-db
           command: ovs-vsctl --no-wait show
           dependencies:
-            - vswitchd-bootstrap
             - openvswitch-db:local
         # {% for net in neutron.physnets %}
         - name: vswitchd-setup-ovs-bridge-{{ net.name }}
           command: /usr/local/bin/ovs-ensure-configured.sh {{ net.bridge_name }} {{ net.interface }}
-          dependencies:
-            - vswitchd-check-ovs-db
         # {% endfor %}
       daemon:
         command: /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
