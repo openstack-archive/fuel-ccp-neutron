@@ -30,12 +30,12 @@ service:
           dependencies:
             - keystone-create-project
           type: single
-          command: openstack user create --project service --password {{ neutron.db.password }} {{ neutron.db.username }}
+          command: openstack user create --project service --password {{ neutron.password }} {{ neutron.username }}
         - name: neutron-role-add
           dependencies:
             - neutron-user-create
           type: single
-          command: openstack role add --project service --user {{ neutron.db.username }} admin
+          command: openstack role add --project service --user {{ neutron.username }} admin
         - name: neutron-service-create
           dependencies:
             - keystone
