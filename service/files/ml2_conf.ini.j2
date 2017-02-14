@@ -17,6 +17,8 @@ mechanism_drivers = linuxbridge,l2population
 mechanism_drivers = calico
 {% elif neutron.plugin_agent == "opendaylight" %}
 mechanism_drivers = opendaylight, logger
+{% elif neutron.sriov %}
+mechanism_drivers = openvswitch,sriovnicswitch
 {% endif %}
 
 extension_drivers = port_security{% if neutron.enable_qos %},qos{% endif %}
@@ -44,6 +46,8 @@ vxlan_group = 239.1.1.1
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 {% elif neutron.plugin_agent == "linuxbridge" %}
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+{% elif neutron.sriov %}
+firewall_driver = neutron.agent.firewall.NoopFirewallDriver
 {% endif %}
 
 {% if neutron.plugin_agent == "openvswitch" %}
