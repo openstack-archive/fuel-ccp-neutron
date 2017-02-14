@@ -33,6 +33,7 @@ configs:
     ovsdb:
       interface: "native"
       connection: "unix:/run/openvswitch/db.sock"
+    enable_sriov: false
     enable_lbaas: false
     enable_qos: false
     calico:
