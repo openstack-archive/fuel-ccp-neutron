@@ -35,6 +35,8 @@ configs:
       connection: "unix:/run/openvswitch/db.sock"
     enable_lbaas: false
     enable_qos: false
+    sriov:
+      enable: false
     calico:
       etcd_host: "etcd-k8s"
       etcd_port: 2379

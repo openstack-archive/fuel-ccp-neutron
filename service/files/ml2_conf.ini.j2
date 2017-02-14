@@ -10,7 +10,11 @@ tenant_network_types = {{ neutron.ml2.tenant_network_types|join(',') }}
 {% endif %}
 
 {% if neutron.plugin_agent == "openvswitch" %}
+{% if neutron.sriov.enable %}
+mechanism_drivers = openvswitch,sriovnicswitch
+{% else %}
 mechanism_drivers = openvswitch,l2population
+{% endif %}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 mechanism_drivers = linuxbridge,l2population
 {% elif neutron.plugin_agent == "calico" %}
@@ -41,7 +45,11 @@ vxlan_group = 239.1.1.1
 
 [securitygroup]
 {% if neutron.plugin_agent == "openvswitch" %}
+{% if neutron.sriov.enable %}
+firewall_driver = neutron.agent.firewall.NoopFirewallDriver
+{% else %}
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+{% endif %}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
 {% endif %}
