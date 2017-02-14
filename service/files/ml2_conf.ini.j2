@@ -10,7 +10,11 @@ tenant_network_types = {{ neutron.ml2.tenant_network_types|join(',') }}
 {% endif %}
 
 {% if neutron.plugin_agent == "openvswitch" %}
+{% if neutron.sriov.enabled %}
+mechanism_drivers = openvswitch,sriovnicswitch
+{% else %}
 mechanism_drivers = openvswitch,l2population
+{% endif %}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 mechanism_drivers = linuxbridge,l2population
 {% elif neutron.plugin_agent == "calico" %}
