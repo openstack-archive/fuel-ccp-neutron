@@ -9,6 +9,8 @@ configs:
     server_port:
       cont: 9696
       ingress: network
+    username: neutron
+    password: password
     core_plugin: "ml2"
     ml2:
       tenant_network_types:

@@ -34,14 +34,14 @@ service:
             - ml2-conf.ini
         - name: neutron-user-create
           dependencies:
-            - keystone-create-project
+            - keystone-create-domain
           type: single
-          command: openstack user create --project service --password {{ neutron.db.password }} {{ neutron.db.username }}
+          command: openstack user create --domain {{ service_account.domain }} --password {{ neutron.password }} {{ neutron.username }}
         - name: neutron-role-add
           dependencies:
             - neutron-user-create
           type: single
-          command: openstack role add --project service --user {{ neutron.db.username }} admin
+          command: openstack role add --domain {{ service_account.domain }} --user {{ neutron.username }} admin
         - name: neutron-service-create
           dependencies:
             - keystone
