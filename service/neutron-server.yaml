@@ -41,7 +41,7 @@ service:
           dependencies:
             - neutron-user-create
           type: single
-          command: openstack role add --domain {{ service_account.domain }} --user {{ neutron.username }} admin
+          command: openstack role add --project {{ service_account.project }} --user {{ neutron.username }} admin
         - name: neutron-service-create
           dependencies:
             - keystone
