@@ -71,3 +71,4 @@ driver = {{ searchlight.notification_driver }}
 {# messaging macros templates #}
 {{ oslo_messaging[messaging.backend.notifications]('notifications_config') }}
 {{ oslo_messaging[messaging.backend.rpc]('rpc_config') }}
+{{ oslo_messaging.rabbit_tls() }}
