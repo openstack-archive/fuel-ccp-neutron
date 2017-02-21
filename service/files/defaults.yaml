@@ -25,7 +25,7 @@ configs:
         interface: "eth2"
         flat: true
         vlan_range: false
-    logging_debug: false
+    debug: false
     plugin_agent: "openvswitch"
     l3_ha: false
     ovsdb:
