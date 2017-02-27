@@ -56,7 +56,7 @@ root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
 root_helper_daemon = sudo neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
 
 [database]
-connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address(service.database) }}/{{ neutron.db.name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
+connection = mysql+pymysql://{{ neutron.db.username }}:{{ neutron.db.password }}@{{ address(database) }}/{{ neutron.db.name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
 max_retries = -1
 max_pool_size = {{ neutron.db.max_pool_size }}
 max_overflow = {{ neutron.db.max_overflow }}

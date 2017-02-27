@@ -15,9 +15,9 @@ service:
       pre:
         - name: neutron-db-create
           dependencies:
-            - {{ service.database }}
+            - {{ database }}
           type: single
-          command: mysql -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ neutron.db.name }}`;
+          command: mysql -u root -p{{ db.root_password }} -h {{ address(database) }} -e 'create database `{{ neutron.db.name }}`;
                    create user "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
                    {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ neutron.db.name }}`.* to "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
