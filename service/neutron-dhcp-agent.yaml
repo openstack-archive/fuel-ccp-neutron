@@ -18,8 +18,8 @@ service:
         command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini
         dependencies:
           - neutron-db-sync
-          - "{{ messaging.dependencies[messaging.backend.rpc] }}"
-          - "{{ messaging.dependencies[messaging.backend.notifications] }}"
+          - rpc
+          - notifications
         files:
           - neutron.conf
           - ml2-conf.ini
