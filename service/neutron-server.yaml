@@ -15,9 +15,9 @@ service:
       pre:
         - name: neutron-db-create
           dependencies:
-            - {{ service.database }}
+            - database
           type: single
-          command: mysql -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ neutron.db.name }}`;
+          command: mysql -u root -p{{ db.root_password }} -h {{ address("database") }} -e 'create database `{{ neutron.db.name }}`;
                    create user "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
                    {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ neutron.db.name }}`.* to "{{ neutron.db.username }}"@"%" identified by "{{ neutron.db.password }}"
@@ -26,8 +26,8 @@ service:
           type: single
           command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
           dependencies:
-            - "{{ messaging.dependencies[messaging.backend.rpc] }}"
-            - "{{ messaging.dependencies[messaging.backend.notifications] }}"
+            - rpc
+            - notifications
             - neutron-db-create
           files:
             - neutron.conf
