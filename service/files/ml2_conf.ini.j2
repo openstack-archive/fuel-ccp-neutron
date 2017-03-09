@@ -52,6 +52,10 @@ tunnel_types = vxlan
 l2_population = true
 arp_responder = true
 
+{% if neutron.dvr %}
+enable_distributed_routing = true
+{% endif %}
+
 [ovs]
 ovsdb_interface = {{ neutron.ovsdb.interface }}
 ovsdb_connection = {{ neutron.ovsdb.connection }}
