@@ -3,16 +3,11 @@ configs:
     tls:
       enabled: true
     db:
-      password: password
-      name: neutron
-      username: neutron
       max_pool_size: 10
       max_overflow: 50
     server_port:
       cont: 9696
       ingress: network
-    username: neutron
-    password: password
     core_plugin: "ml2"
     ml2:
       tenant_network_types:
@@ -78,8 +73,6 @@ configs:
       cont: 6653
     dlux_port:
       cont: 8181
-    username: admin
-    password: password
     karaf:
       features_boot:
         - odl-neutron-service
@@ -92,6 +85,20 @@ configs:
         - odl-ovsdb-ui
     logging:
       max_file_size: 1024GB
+
+secret_configs:
+  neutron:
+    db:
+      password: password
+      name: neutron
+      username: neutron
+
+    username: neutron
+    password: password
+
+  opendaylight:
+    username: admin
+    password: password
 
 sources:
   openstack/neutron:
