@@ -1,0 +1,10 @@
+Verified+1: Mirantis CCP CI <mirantis-fuel-ccp-ci@mirantis.com>
+Code-Review+2: Andrey Pavlov <apavlov@mirantis.com>
+Code-Review+2: Yuriy Taraday <yorik.sar@gmail.com>
+Workflow+1: Yuriy Taraday <yorik.sar@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 13 Mar 2017 12:57:23 +0000
+Reviewed-on: https://review.openstack.org/434167
+Project: openstack/fuel-ccp-neutron
+Branch: refs/heads/master
