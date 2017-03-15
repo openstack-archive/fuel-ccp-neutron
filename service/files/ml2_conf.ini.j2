@@ -45,7 +45,11 @@ vxlan_group = 239.1.1.1
 
 [securitygroup]
 {% if neutron.plugin_agent == "openvswitch" %}
+{% if True in neutron.physnets|map(attribute="dpdk") %}
+firewall_driver = openvswitch
+{% else %}
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+{% endif %}
 {% elif neutron.plugin_agent == "linuxbridge" %}
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
 {% endif %}
@@ -61,6 +65,9 @@ enable_distributed_routing = true
 {% endif %}
 
 [ovs]
+{% if True in neutron.physnets|map(attribute="dpdk") %}
+datapath_type = netdev
+{% endif %}
 ovsdb_interface = {{ neutron.ovsdb.interface }}
 ovsdb_connection = {{ neutron.ovsdb.connection }}
 bridge_mappings =
