@@ -1,1 +1,0 @@
-%microservices ALL=(root) NOPASSWD: /bin/chown neutron\: /var/lib/neutron/ccp, /usr/bin/chown neutron\: /var/lib/neutron/ccp

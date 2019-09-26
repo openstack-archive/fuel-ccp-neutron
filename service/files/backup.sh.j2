@@ -1,6 +1,0 @@
-#!/bin/bash -ex
-set -o pipefail
-BACKUP_FILE="/var/ccp/backup/neutron/backup-$(date "+%Y%m%d%H%M%S").sql"
-mysqldump {% if db.tls.enabled %} --ssl-mode REQUIRED {% endif %} -h {{ address("database")  }} \
-    -u {{ neutron.db.username }} -p{{ neutron.db.password }} \
-    --single-transaction {{ neutron.db.name }} > "${BACKUP_FILE}"
